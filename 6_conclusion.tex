@@ -1,0 +1,12 @@
+\section{Conclusion}
+\label{sec:conclusion}
+We present a novel algorithm for computing singular values and vectors called bisection and twisted (BT) algorithm, 
+which is implemented on both single GPUs and a multi-GPU platform.
+The experimental results show that BT outperforms a number of existing
+work on SVD acceleration. %Additionally, BT's scalability is excellent:
+One of the major advantages for BT algorithm is its scalability:
+we are the first to perform SVD on a matrix of 1 million by 1 million,
+using only two GPUs. In the near future, we plan to extend our multi-GPU version of BT
+with network middleware such as MPI so that BT algorithm can be further 
+extended to distributed GPUs.
+%scaled with GPU clusters.
