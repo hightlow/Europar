@@ -2,10 +2,10 @@
 Singular value decomposition (SVD) is one of the most important factorizations in matrix computation.
 However, computing the singular values and their vectors is still time-consuming, especially when the dimension of matrices exceeds tens of thousands.
 In this paper, we present a high performance approach called ``Bisection and Twisted'' (BT) for solving bidiagonal SVD. 
-Based on the bidiagonal SVD method and with a complexity of $O(n^2)$, the BT algorithm has three salient features:
-(1) it is shown to have weak data dependency, therefore can solve large SVD problems by splitting them into smaller ones; 
-(2) it can compute any subsets of singular values and corresponding vectors directly with computational complexity of $O(kn)$, making it suitable for applications that do not require the whole SVD calculation; and  
-(3) it needs only $O(kn)$ memory space for temporary variables, thus can work on memory-constrained platforms.
+%Based on the bidiagonal SVD method and with a complexity of $O(n^2)$, the BT algorithm has three salient features:
+%(1) it is shown to have weak data dependency, therefore can solve large SVD problems by splitting them into smaller ones; 
+%(2) it can compute any subsets of singular values and corresponding vectors directly with computational complexity of $O(kn)$, making it suitable for applications that do not require the whole SVD calculation; and  
+%(3) it needs only $O(kn)$ memory space for temporary variables, thus can work on memory-constrained platforms.
 As modern general purpose GPUs have shown their extreme computational advantages in parallel computing, we implement the BT algorithm on single and multiple GPUs.
 With our carefully designed GPU kernels, the BT algorithm takes only 0.8 second to obtain all the singular values and vectors on a GeForce 750Ti for a single-precision matrix size of $10k$ by $10k$, and 1.5 seconds on Tesla K40c for a double-precision matrix of the same size.
 This is about $10$ times faster than MKL divide-and-conquer routine DBDSDC on $8$ general purpose cores, and $36$ times faster than CULA QR routine DBDSQR on the same GPUs.

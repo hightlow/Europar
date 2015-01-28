@@ -22,26 +22,18 @@ B^T B = \left( \begin{array}{cc }B_1^T & 0 \end{array} \right) \left( \begin{arr
 \]
 we assume, without loss of generality, that $B$ is a $n \times n$ bidiagonal matrix in this paper.
  
-The first step reduces the time complexity of QR, Jacobi and bisection and inverse algorithms 
-from $O(n^4)$ to $O(n^3)$. 
-%The Divide-and-Conquer algorithm doesn't even work without reducing the matrices to bidiagonal forms.
-However, Householder transform has only one iteration, which takes a small portion of the time spending on solving the SVD.
-Thus, we focus only on the second step that reduces a bidiagonal matrix to a diagonal matrix, for which the  ``bisection and twisted'' algorithm is designed.
-%We briefly introduce the {\it bisection and twisted algorithm} for computing the singular values and vectors of a bidiagonal matrix.
+Since Householder transform has been fully optimized in paper \cite{LiuHouseholder}.
+In this paper, we focus only on the second step that reduces a bidiagonal matrix to a diagonal matrix, for which the  ``bisection and twisted'' algorithm is designed.
 
 The bisection and twisted algorithm is divided into two phases:
-%\begin{enumerate}
-%\item
 (1) obtain the singular values of the bidiagonal matrix by using bisection approach; and
-%\item
 (2) obtain the corresponding left and right singular vectors of every singular value by using twisted factorization.
-%\end{enumerate}
 Next we illustrate these two phases in the following subsections.
 
 \subsection{Bisection Algorithm}
-Bisection algorithm is widely used in many applications to find the roots of a sophisticated equation that cannot be solved directly.
-It repeatedly bisects an interval and then selects a subinterval in which a root lies for further processing until convergence.
-Bisection is an approximation algorithm for solving sophisticated equation and can reach certain relative accuracy solution.
+%Bisection algorithm is widely used in many applications to find the roots of a sophisticated equation that cannot be solved directly.
+%It repeatedly bisects an interval and then selects a subinterval in which a root lies for further processing until convergence.
+%Bisection is an approximation algorithm for solving sophisticated equation and can reach certain relative accuracy solution.
 
 Suppose $B$ is an upper bidiagonal $n \times n$ matrix with elements $b_{i,j}$ reduced by Householder transform \cite{10householder}.
 The matrix $T = B^T B - \mu^2 I_n$ can be decomposed as
