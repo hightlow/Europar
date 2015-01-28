@@ -1,9 +1,11 @@
-OBJ=BTSVD
-SRC=0_abstract.tex 1_intro.tex 2_relate.tex 3_algorithm.tex 4_implement.tex 5_experiment.tex 6_conclusion.tex algorithm_bisection.tex bibliography.tex
+all:
+	pdflatex BTSVD.tex
+	pdflatex BTSVD.tex
+	bibtex BTSVD.aux
+	bibtex BTSVD.aux
+	pdflatex BTSVD.tex
+	pdflatex BTSVD.tex
 
-all: $(OBJ).tex $(SRC)
-	pdflatex $(OBJ)
-	pdflatex $(OBJ)
 
 normal: $(OBJ).tex $(SRC)
 #	bibtex $(OBJ)
