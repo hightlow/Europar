@@ -1,33 +1,34 @@
 \section{Bisection and Twisted Algorithm}
 \label{sec:algorithm}
-For an arbitrary matrix $A\in R^{m \times n} (m>n)$ all SVD algorithms discussed in section \ref{sec:intro} consist of two steps:
-The first step is to reduce the initial matrix $A$ to bidiagonal form using Householder transformation.
-The second step is to reduce the bidiagonal matrix into a diagonal matrix.
+For an arbitrary matrix $A\in \mathbb{R}^{m \times n} (m>n)$, we can decompose $A$ as follows:
+% all SVD algorithms discussed in section \ref{sec:intro} consist of two steps:
+%The first step is to reduce the initial matrix $A$ to bidiagonal form using Householder transformation.
+%The second step is to reduce the bidiagonal matrix into a diagonal matrix.
 
-By applying the Householder transformation, we can decompose the matrix $A$ as follows:
+%By applying the Householder transformation, we can decompose the matrix $A$ as follows:
 \begin{equation}
 \label{H-transform}
 A = Q B P^T ,
 \end{equation}
-where $B \in R^{m \times n}$ is a bidiagonal matrix of the following form:
+where $B \in \mathbb{R}^{m \times n}$ is a bidiagonal matrix of the following form:
 \begin{equation}
 B = \left( \begin{array}{c}
       B_1 \\
       0  
 \end{array} \right) 
 \end{equation}
-Here $B_1 \in R^{n \times n}$ is a bidiagonal matrix. Since 
+Here $B_1 \in \mathbb{R}^{n \times n}$ is a bidiagonal matrix. Since 
 \[
 B^T B = \left( \begin{array}{cc }B_1^T & 0 \end{array} \right) \left( \begin{array}{c} B_1 \\ 0  \end{array} \right) = B_1^T B_1,
 \]
 we assume, without loss of generality, that $B$ is a $n \times n$ bidiagonal matrix in this paper.
  
-Since Householder transform has been fully optimized in paper \cite{LiuHouseholder}.
+Since Householder transform above has been fully optimized in paper \cite{LiuHouseholder}.
 In this paper, we focus only on the second step that reduces a bidiagonal matrix to a diagonal matrix, for which the  ``bisection and twisted'' algorithm is designed.
 
 The bisection and twisted algorithm is divided into two phases:
-(1) obtain the singular values of the bidiagonal matrix by using bisection approach; and
-(2) obtain the corresponding left and right singular vectors of every singular value by using twisted factorization.
+(1) obtain the singular values of the bidiagonal matrix by bisection approach; and
+(2) obtain the corresponding left and right singular vectors of every singular value by twisted factorization.
 Next we illustrate these two phases in the following subsections.
 
 \subsection{Bisection Algorithm}
@@ -71,7 +72,7 @@ b_{k-1,k}^2 + b_{k,k}^2 - \mu^2 &= l_{k-1}^2 d_{k-1} + d_k
 where $k = 2,3,\cdots,n$.
 Next, we define an auxiliary values $t_{k}$ as
 \begin{equation}
-t_{k} = t_{k-1} * (b_{k-1,k}^2 / d) - \mu^2 ,
+t_{k} = t_{k-1} * (b_{k-1,k}^2 / d_{k-1}) - \mu^2 ,
 \label{eq:tmp}
 \end{equation}
 and then all the equations in Eq. (\ref{eq:ldl}) reduce to
@@ -85,132 +86,65 @@ d_k = b_{k,k}^2 + t_{k}
 \label{eq:negcount}
 \end{equation}
 
-It is clear that matrices $D$ and $T$ are two congruent symmetric matrices.
+Matrices $D$ and $T$ are two congruent symmetric matrices.
 According to the Sylvester's law of inertia, both matrices $D$ and $T$ have the same numbers of positive, negative, and zero eigenvalues.
-We define a function denoted by $NegCount(\mu)$ to count the number of negative eigenvalues of matrix $T$.
-Algorithm \ref{alg:negcount} describes how $NegCount$ function works.
-%Variable initialization is in Line 2. 
-Lines 3-7 calculate the negative number of singular values that are less than $\mu$.
-%Line 3-9 calculate the negative number of singular values that are less than $\mu$.
-%In order to count the number of negative eigenvalues of matrix $T$, we define a function known as  $NegCount(\mu)$.
-%$NegCount(\mu)$ is the core idea for bisection, and will be used to bisect the interval of solutions in Algorithm \ref{alg:bisection}.
-Since matrices $B$ and $B^T$ have the same singular values,
-$NegCount(\mu)$ is the number of the singular values of $B$ which are less than $\mu$.
-It is clear that if the floating point arithmetic is monotonic, then $NegCount(x)$ is a monotonically non-decreasing function of $x$\cite{95ETNAbisecion}.
-\input{algorithm_negcount}
+Thus, the number of negative elements in the diagonal of matrix $D$ is the number of singular values of matrix $T$.
+We define a function denoted by $NegCount(\mu)$ to count the number of elements  in the diagonal of matrix $D$ that are negative. %described in Algorithm \ref{alg:negcount}.
+%Algorithm \ref{alg:negcount} describes how $NegCount$ function works.
+%Lines 3-7 calculate the negative number of singular values that are less than $\mu$.
+%Since matrices $B$ and $B^T$ have the same singular values,
+$NegCount(\mu)$ is also the number of the singular values of $B$ which are less than $\mu$.
+%If the floating point arithmetic is monotonic, then $NegCount(x)$ is a monotonically non-decreasing function of $x$ \cite{95ETNAbisecion}.
+% \input{algorithm_negcount}
 
 %Algorithm \ref{alg:negcount} is used to count the number of singular values of matrix $B$ those are less than $\mu$.
 %From the algorithm, the number of singular values in an arbitrary interval $[\mu_1,\mu_2)$ are $c_{\mu_2} - c_{\mu_1}$.
-Algorithm \ref{alg:bisection} is the bisection algorithm for calculating the singular values in interval $[l,u)$. Based on the definition of $NegCount$ the total number of singular values in $[l,u)$ is $n_u - n_l = NegCount(u) - NegCount(l)$.
-Lines 5-17 can be parallelized in bisection algorithm.
+%Algorithm \ref{alg:bisection} is the bisection algorithm for calculating the singular values in interval $[l,u)$. Based on the definition of $NegCount$ the total number of singular values in $[l,u)$ is $n_u - n_l = NegCount(u) - NegCount(l)$.
+%Lines 5-17 can be parallelized in bisection algorithm.
 %In our implementation, we parallelize Line 5-17 of the bisection algorithm. 
-\input{algorithm_bisection}
-%\textcolor{blue}{
-%The basic steps of Algorithm \ref{alg:bisection} are as follows:
-%\begin{enumerate}
-%\item Check whether singular values are in interval (Line 2-4);
-%\item Put the interval into Worklist (Line 5);
-%\item Check Worklist is non-empty, load subinterval from Worklist (Line 6-7);
-%\item If the subinterval are convergence, save singular values (Line 9-11);
-%\item Else bisect one interval containing singular values into two subintervals (Line 13);
-%\item Call $NegCount$ algorithm to get the number of singular values in subintervals (Line 14).
-%\item Select the subinterval(s) which contain singular values for further bisection (Line 16-21).
-%\item Repeat 3-7 until all subintervals are sufficiently small.
-% which means the left border and right border of the subintervals are almost equal to each other.
-%\item The singular values are considered as the midpoint of the subintervals.
-%\end{enumerate}
-%I want to delete it.
-%}
+%\input{algorithm_bisection}
 
-
-\subsubsection{Weak Data Dependency of Bisection Algorithm}
-~
-
-%In this section, we will prove why the data dependence of bisection algorithm is weak.
-%Since the singular values are all positive, we suppose that the boundary containing all the singular values is $[0, ug)$.
-%$ug$ can be calculated by Gershgorin circle theorem\cite{gershgorin}.
-The efficiency of our algorithm is based on the assumption that the data dependencies for both separating and calculating phases are weak so that we could divide the big problem into smaller but loosely coupled components. Since the singular values are all positive, we assume that the boundary containing all the singular values is $[0, ug)$, where the upper bound $ug$ can be calculated by Gershgorin circle theorem\cite{gershgorin}.
-
-%After obtaining the boundary, we separate the boundary $[0,ug)$ into $p$ subintervals, and each subinterval $[l_i,u_i)$ can be calculates 
+%\subsubsection{Weak Data Dependency of Bisection Algorithm}
+%~
+%The efficiency of our algorithm is based on the assumption that the data dependencies for both separating and calculating phases are weak so that we could divide the big problem into smaller but loosely coupled components. Since the singular values are all positive, we assume that the boundary containing all the singular values is $[0, ug)$, where the upper bound $ug$ can be calculated by Gershgorin circle theorem\cite{gershgorin}.
+%
+%After obtaining the boundary, we divide the interval $[0,ug)$ into $p$ subintervals, and each subinterval $[l_i,u_i)$ can be calculated as follows:
 %\begin{eqnarray}
 %l_i &=& (ug/p) * (i-1)\\
-%u_i &=& (ug/p) * i 
+%u_i &=& (ug/p) * i ,
 %\end{eqnarray}
-%where $i = 1, 2, \cdots, p$. In the subinterval of $[l_i,u_i)$, we can calculate the number of singular values that are less than $l_i$ and $u_i$, separately.
+%where $i = 1, 2, \cdots, p$. Then we can calculate the numbers of singular values $n_{l_i}$ and $n_{u_i}$ that are less than $l_i$ and $u_i$ as follows, respectively:
 %\begin{eqnarray}
 % n_{l_i} = NegCount(l_i) \\
-% n_{u_i} = NegCount(u_i)
+% n_{u_i} = NegCount(u_i) .
 %\end{eqnarray}
-%The number of singular values between $[l_i,u_i)$ is $n_{u_i} - n_{l_i}$, and the indices of the singular values are $n_l, n_l+1, ..., n_u-1$.
-%It shows that the data dependence is weak in separating phase.
-After obtaining the boundary, we divide the interval $[0,ug)$ into $p$ subintervals, and each subinterval $[l_i,u_i)$ can be calculated as follows:
-\begin{eqnarray}
-l_i &=& (ug/p) * (i-1)\\
-u_i &=& (ug/p) * i ,
-\end{eqnarray}
-where $i = 1, 2, \cdots, p$. Then we can calculate the numbers of singular values $n_{l_i}$ and $n_{u_i}$ that are less than $l_i$ and $u_i$ as follows, respectively:
-\begin{eqnarray}
- n_{l_i} = NegCount(l_i) \\
- n_{u_i} = NegCount(u_i) .
-\end{eqnarray}
-It is easily seen that the number of singular values in interval $[l_i,u_i)$ is $n_{u_i} - n_{l_i}$ and the indices of these singular values are $n_l, n_l+1, ..., n_u-1$. 
-We thus illustrate that the data dependence is weak when dividing the interval
-to subintervals.
-
-%Next, we show in calculating phase, the bisection algorithm is also weak data dependence.
+%$n_{u_i} - n_{l_i}$ is the number of singular values in interval $[l_i,u_i)$ and $n_l, n_l+1, ..., n_u-1$ are the indices of these singular values. 
+%The interval can be divided 
+%We thus illustrate that the data dependence is weak when dividing the interval
+%to subintervals.
+%
+%Now, we show that the data dependency in bisection algorithm is also weak in the calculation phase (Algorithm \ref{alg:bisection}).
 %Suppose $[l,u)$ is an subinterval containing several singular values of a matrix.
-%$n_l$ and $n_u$ are the numbers of singular values that are less than $l$ and $u$, separately. 
-%How is bisection algorithm able calculate an arbitrary singular value $v$ with index $(n_l+k)$ in an subinterval $[l,u)$?
-%After several times' bisection iteration, the subinterval $[l,u)$ reduces to $[v_1,v_1+\tau)$, whose $Necount$ are $(n_l+k-1)$ and $(n_l+k)$, separately.
-%$v$ is in the subinterval $[v_1,v_1+\tau)$. if $\tau$ is small enough, we can recognize $v1$ is equal to $v$. Thus, $v1$ is the singular value with index $(n_l+k)$.
-%The total procedure of bisection algorithm only require $NegCount$ function.
-%They do not need the information of other singular values.
-Now, we show that the data dependency in bisection algorithm is also weak in the calculation phase (Algorithm \ref{alg:bisection}).
-Suppose $[l,u)$ is an subinterval containing several singular values of a matrix.
-$n_l$ and $n_u$ are the numbers of singular values that are less than $l$ and $u$, respectively.
-How is the bisection algorithm able to calculate an arbitrary singular value $v$ with index $(n_l+k)$ in an subinterval $[l,u)$?
-After several bisection iterations, the subinterval $[l,u)$ reduces to $[v_1,v_1+\tau)$, whose $NegCount$ are $(n_l+k-1)$ and $(n_l+k)$, respectively.
-Since $v$ is in the subinterval $[v_1,v_1+\tau)$, we know that $| v_1 - v | < \tau$, and if $\tau$ is small enough, we stop the iteration and take $v_1$ as calculated singular value with index $(n_l+k)$.
-The whole procedure of bisection algorithm requires only $NegCount$ function without the information of other singular values.
-
-%We want to obtain the $(n_l+k)$-th ($k< n_u-n_l$) singular value in interval $[l,u)$.
-%After we make use of bisection algorithm above, $m=(l+u)/2$ is considered to be the singular value(s) of matrix $B$ with multiplicity $r=n_u-n_l$ with error less than $\tau/2$ from the actual values. The indices of singular values in that interval is $(n_l+k) \to (n_l+k+r-1)$.That is
-%\begin{eqnarray}
-% v_{n_l+k} = \cdots = v_{n_l+k+r-1} = m.
-%\end{eqnarray}
-%Also, $n_l+k-1$ singular values are less than $v_{n_l+k}$, and $n-(n_l+k+r-1)$ singular values are larger than $v_{n_l+k}$. 
-%Bisection algorithm is able to calculate the singular value without any information of other singular values.
-%\textcolor{blue}{This is why the data dependence of bisection algorithm is weak.}
-%After using $n$ times of bisection algorithm with different index $j\;\; (j=1,2,\cdots,n)$ in serial. we can obtain all singular values in an increasing sequence. 
-%\[ v_{j} \le v_{j+1} \]
-
-%The interval containing all the singular values can be calculated by Gershgorin circle theorem\cite{gershgorin}.
-%In the algorithm, $MidPoint$ should avoid the possibility of overflow or underflow.
-
-\subsubsection{Error Analysis}
-~
-
-In theory, the bisection algorithm is bound to the upper limit of error between actual value and calculating value, which can be set according to particular applications. 
-The selection of an error tolerance $\tau$ greatly impacts the execution time of the algorithm. 
-Large error tolerance will allow us to solve the problem quick but result in low accuracy.
-On the other hand, too small value for $\tau$ may fail to reach the required accuracy.
-%Large error tolerance may solve the problem quick but result in low accuracy. 
-%If the tolerance of error $\tau$ is too large, the algorithm may obtain the singular values with relatively low accuracy, but the execution time may be faster due to the smaller number of iterations.
-%However, if we choose a too small value for $\tau$, the computation may not reach the required accuracy.
-Based on our tests, we can obtain the singular values with error tolerance less than $10^{-18}$.
-%, this is good enough for most of the applications \textcolor{red}{(do we have any references?)}.
+%$n_l$ and $n_u$ are the numbers of singular values that are less than $l$ and $u$, respectively.
+%How is the bisection algorithm able to calculate an arbitrary singular value $v$ with index $(n_l+k)$ in an subinterval $[l,u)$?
+%After several bisection iterations, the subinterval $[l,u)$ reduces to $[v_1,v_1+\tau)$, whose $NegCount$ are $(n_l+k-1)$ and $(n_l+k)$, respectively.
+%Since $v$ is in the subinterval $[v_1,v_1+\tau)$, we know that $| v_1 - v | < \tau$, and if $\tau$ is small enough, we stop the iteration and take $v_1$ as calculated singular value with index $(n_l+k)$.
+%The whole procedure of bisection algorithm requires only $NegCount$ function without the information of other singular values.
+%
+%\subsubsection{Error Analysis}
+%~
+%
+%In theory, the bisection algorithm is bound to the upper limit of error between actual value and calculating value, which can be set according to particular applications. 
+%The selection of an error tolerance $\tau$ greatly impacts the execution time of the algorithm. 
+%Large error tolerance will allow us to solve the problem quick but result in low accuracy.
+%On the other hand, too small value for $\tau$ may fail to reach the required accuracy.
+%Based on our tests, we can obtain the singular values with error tolerance less than $10^{-16}$.
 
 \subsection{Twisted Algorithm}
 
-The second phase of our algorithm, twisted algorithm, calculates the corresponding left and right singular vectors.
-It has advantages over existing approaches such as the power method\cite{08power}, which can only find the largest singular value and the corresponding singular vector, and inverse iteration\cite{11iterative}, which does not guarantee the accuracy and orthognality of the singular vectors when the singular values are clustered. In contrast, the twisted algorithm \cite{09NLAAtwisted} can calculate  orthogonal singular vectors with adequate accuracy. 
-%The simplest method to obtain the singular vectors is the power method\cite{08power}. The limitation is that it can find only the largest singular value and the corresponding singular vector.
-%Inverse iteration\cite{11iterative} is another approach for the singular vectors but it doesn't guarantee the accuracy and orthognality of the singular vectors when the singular values are clustered.
-%Moreover, the inverse iteration requires time complexity of $O(n^3)$ to obtain all the singular vectors.
+The second phase of our algorithm, twisted algorithm, calculates the corresponding singular vectors.
+It has advantages over existing approaches such as the power method\cite{08power}, which can only find the largest singular value and the corresponding singular vector, and inverse iteration\cite{11iterative}, which does not guarantee the accuracy and orthognality of the singular vectors when the singular values are clustered. In contrast, the twisted algorithm can calculate  orthogonal singular vectors with adequate accuracy \cite{09NLAAtwisted}. 
 
-%To address these issues, we utilize the improved twisted factorization to calculate the singular vectors.
-%The algorithm can address the accurate or orthogonal problems in general bisection and inversed algorithm.
-%It can also solve the singular vectors whose singular values are clustered together.
 Suppose $\lambda$ is a singular value of bidiagonal matrix $B \in R^{n \times n}$.
 Then the matrix $B^T B - \lambda^2 I$ can be decomposed as
 \begin{equation}
@@ -284,11 +218,11 @@ One advantage of BT algorithm is that it can be applied to cases where singular 
 Suppose $m$ is the multiplicity of singular values of matrix $B$. 
 The algorithm selects the indices of the first $m$ minimum values of $\gamma$. %(May need some more clarification????)} 
 Each index $k$ in $m$ has a different twisted factorization, and thus the singular vector can be obtained by solving its own Eq. (\ref{eq:unnorm}). These singular vectors are also orthogonal to each others\cite{09NLAAtwisted}.
-\input{algorithm_twisted}
-Algorithm \ref{alg:twisted} is the algorithm to obtain the corresponding singular vectors of given singular values.
-Lines 4-7 are two obtain the parameter $\gamma$.
-Obtain the multiplicity of a singular value and their corresponding minimum values are described in Lines 8-9.
-Lines 10-16 are to calculate the singular vectors and normalize them.
-%We completely parallelize the twisted factorization to speed up the algorithm on GPU architecture.
-The cost for every singular vector transformation is $O(n)$, and the total cost of the transformations is $O(n^2)$.
+%\input{algorithm_twisted}
+%Algorithm \ref{alg:twisted} is the algorithm to obtain the corresponding singular vectors of given singular values.
+%Lines 4-7 are two obtain the parameter $\gamma$.
+%Obtain the multiplicity of a singular value and their corresponding minimum values are described in Lines 8-9.
+%Lines 10-16 are to calculate the singular vectors and normalize them.
+%%We completely parallelize the twisted factorization to speed up the algorithm on GPU architecture.
+%The cost for every singular vector transformation is $O(n)$, and the total cost of the transformations is $O(n^2)$.
 

@@ -1,13 +1,13 @@
 \section{Implementation and Optimization on GPU}
 \label{sec:implementation}
 In this section, we describe the implementation of bisection and twisted algorithm on a GPU.
-A GPU with CUDA architecture typically uses Single Program Multiple Threads (SPMT) model to execute its workload. 
-A GPU thread is the fundamental working unit of a parallel program and a GPU warp consists of 32 concurrent threads. 
-A GPU block is a group of threads sharing data via the shared memory, and the number of threads per block is typically a multiple of 32 and ranges from 256 to 1024. The number of threads per block determines the number of warps, which are assigned to GPU's cores by its internal scheduler.
-The goal of implementing our BT algorithm is to maximize the warp execution efficiency, which is defined as the average percentage of active threads in each executed warp to take full advantage of GPU resources.
+%A GPU with CUDA architecture typically uses Single Program Multiple Threads (SPMT) model to execute its workload. 
+%A GPU thread is the fundamental working unit of a parallel program and a GPU warp consists of 32 concurrent threads. 
+%A GPU block is a group of threads sharing data via the shared memory, and the number of threads per block is typically a multiple of 32 and ranges from 256 to 1024. The number of threads per block determines the number of warps, which are assigned to GPU's cores by its internal scheduler.
+%The goal of implementing our BT algorithm is to maximize the warp execution efficiency, which is defined as the average percentage of active threads in each executed warp to take full advantage of GPU resources.
 
-We implement our BT algorithm in two steps: 
-we design singular value kernels in the first step (Section \ref{sec_svalue}) and singular vector kernels in the second step (Section \ref{sec_svector}), and then map them onto the appropriate GPU components. We also leverage GPU-specific optimizations for handling huge matrix from big data applications.
+%We implement our BT algorithm in two steps: 
+%we design singular value kernels in the first step (Section \ref{sec_svalue}) and singular vector kernels in the second step (Section \ref{sec_svector}), and then map them onto the appropriate GPU components. We also leverage GPU-specific optimizations for handling huge matrix from big data applications.
 
 \subsection{Singular Value Kernels}
 \label{sec_svalue}
