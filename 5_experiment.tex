@@ -141,19 +141,19 @@ bandwidth as listed in Table~\ref{tab:spec}.
 
 \begin{figure}[hbpt]
 \centering
-\includegraphics[width=0.36\textwidth]{svd_vec_gpus}
-\caption{Execution time of singular vector kernel on different GPUs}
-\label{fig:svd_vec}
+  \subfigure[Execution time]
+  {
+    \includegraphics[width=0.3\textwidth,height=1.45in]{svd_vec_gpus}
+    \label{fig:svd_vec}
+  }
+  \subfigure[Profiling Data]
+  {
+    \includegraphics[width=0.6\textwidth]{svd_vec_gpus_prof}
+    \label{fig:svd_vec_prof}
+  }
+  \caption{Singular Vector Kernel on Different GPUs}
+  \label{fig:svd}
 \vspace{-0.2in}
-\end{figure}
-
-\begin{figure}[hbpt]
-\centering
-\includegraphics[width=0.5\textwidth,height=1.5in]{svd_vec_gpus_prof}
-\caption{Profiling Data of Singular Vector Kernel on Different GPUs}
-%\textbf{NOTE : No point means cannot get profiling data, I want to get GFLOPS, but Tesla has no such data}}
-\label{fig:svd_vec_prof}
-\vspace{-0.15in}
 \end{figure}
 
 Figure \ref{fig:svd_vec_prof} shows thread and memory bandwidth utilizations of singular vector design on different GPUs. 
@@ -173,6 +173,7 @@ As in our experimental platform, the multiple GPUs in a server may differ
 in architecture and performance, thus we need to balance the load on them
 to achieve the best speedup.
 
+\if 0
 \subsubsection{Load Balance}
 Figure \ref{fig:pthread} shows the total execution times with load distributed to the two GPUs
 (Quadro 600 and GeForce 750 Ti) for different matrix sizes on our server.
@@ -197,8 +198,10 @@ GeForce has 5 times more effective cores than Quadro.
 \label{fig:pthread}
 \vspace{-0.15in}
 \end{figure}
+\fi
 
 \subsubsection{Huge Size Result}
+\if 0
 Table \ref{tab:hresult} gives the execution times for huge size matrices on a single GeForce, a single Quadra, and both of them with the optimal load balancing as shown in Figure~\ref{fig:pthread}.
 When the matrix size is larger than 100K, a single Quadro is not able to calculate the whole SVD.
 The GeForce can calculate the whole SVD until the matrix size reaches to 200K.
@@ -230,6 +233,7 @@ Matrix Size & GeForce & Quadro & GeForce + Quadro \\ \hline
 \label{tab:hresult}
 \vspace{-0.22in}
 \end{table}
+\fi
 
 Table \ref{tab:hugeResultTesla} shows the performance of huge size matrix with double-precision floating-point numbers on a single Tesla and two Tesla GPUs on a server. For two Telsa GPUs, we compared static workload allocation (50\%/50\%) and dynamic allocation where each GPU is tracked constantly by the host CPU and assigned new workload as soon as it finishes the current kernel. 
 %Results that the SVD of a 1 million by 1 million matrix can be calculated with a single Telsa in 54801 %seconds, and with two Telsa GPUs in 35607 seconds, a 1.54 speedup.
@@ -249,11 +253,11 @@ Matrix Size &  Tesla  & Static & Dynamic \\ \hline
 % 50K*50K    &    71s  &   50s /  45s &  44s / 44s \\ \hline
 % 80K*80K    &   180s  &  121s / 103s &  111s / 116s \\ \hline
  100K*100K  &   341s  &  217s / 189s &  210s / 202s \\ \hline
- 120K*120K  &   524s  &  326s / 286s &  311s / 311s \\ \hline
+% 120K*120K  &   524s  &  326s / 286s &  311s / 311s \\ \hline
  150K*150K  &   864s  &  524s / 467s &  498s / 507s \\ \hline
 % 180K*180K  &   966s  & 1207s / 532s &  602s / 607s \\ \hline
  200K*200K  &  1407s  &  955s / 827s &  849s / 858s \\ \hline
- 250K*250K  &  1949s  & 1286s / 1118s & 1199s / 1204s\\ \hline
+% 250K*250K  &  1949s  & 1286s / 1118s & 1199s / 1204s\\ \hline
  300K*300K  &  3490s  & 2234s / 1906s & 2123s / 2110s\\ \hline
  400K*400K  &  6559s  & 4110s / 3709s & 3853s / 3871s\\ \hline
  500K*500K  & 12282s  & 7371s / 6916s  & 7148s / 7129s\\ \hline

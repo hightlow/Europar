@@ -22,12 +22,12 @@ strategies as described below.
 \centering
   \subfigure[Equal Length Division]
   {
-  \includegraphics[width=0.35\textwidth]{length_interval}
+  \includegraphics[width=0.45\textwidth]{length_interval}
   \label{fig:length_interval}
   }
   \subfigure[Equal Number Division]
   {
-  \includegraphics[width=0.35\textwidth]{number_interval}
+  \includegraphics[width=0.45\textwidth]{number_interval}
   \label{fig:number_interval}
   }
   \caption{Division Strategies for Partitioning Interval  $[a_0, a_n)$.}
@@ -40,13 +40,13 @@ the same length (i.e. same number of matrix elements). However, each
 such  subinterval might not contain the same number of singular values.
 Mathematically, this strategy can be expressed as
 % $a_{k+1}-a_k = a_{k}-a_{k-1}$ and $NegCount(b_{k+1})-NegCount(b_{k}) \ne NegCount(b_{k})-NegCount(b_{k-1})$.
-\begin{eqnarray}
-a_{k+1}-a_k = a_{k}-a_{k-1} \hspace{2cm} 
-\end{eqnarray}
+%\begin{eqnarray}
+$a_{k+1}-a_k = a_{k}-a_{k-1}$ %\hspace{2cm} 
+%\end{eqnarray}
 However,
-\begin{eqnarray}
-NegCount(a_{k+1})-NegCount(a_{k}) = NegCount(a_{k})-NegCount(a_{k-1})
-\end{eqnarray}
+%\begin{eqnarray}
+$NegCount(a_{k+1})-NegCount(a_{k}) = NegCount(a_{k})-NegCount(a_{k-1})$
+%\end{eqnarray}
 is not necessarily true. We call this strategy as {\it equal length division}.
 
 %\input{algorithm_lengthsub}
@@ -83,9 +83,9 @@ Our novel strategy is to divide the whole interval by the number of singular val
 Specifically, we divide the interval $[b_0,b_n)$ into $n$ subintervals, each of which has the same number of singular values. 
 However, the length of a subinterval is not necessarily equal to others.
 The mathematical representation can be written as %$NegCount(b_{k+1})-NegCount(b_{k})=NegCount(b_{k})-NegCount(b_{k-1})$ but $b_{k+1}-b_k \ne b_{k}-b_{k-1}$
-\begin{eqnarray}
-NegCount(b_{k+1})-NegCount(b_{k}) = NegCount(b_{k})-NegCount(b_{k-1})
-\end{eqnarray}
+%\begin{eqnarray}
+$NegCount(b_{k+1})-NegCount(b_{k}) = NegCount(b_{k})-NegCount(b_{k-1})$
+%\end{eqnarray}
 but $b_{k+1}-b_k = b_{k}-b_{k-1}$ does not hold anymore.
 This equal number division significantly improves the load balancing on GPU cores, helping achieve a better speedup.
 

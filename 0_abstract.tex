@@ -7,8 +7,7 @@ In this paper, we present a high performance approach called ``Bisection and Twi
 %(2) it can compute any subsets of singular values and corresponding vectors directly with computational complexity of $O(kn)$, making it suitable for applications that do not require the whole SVD calculation; and  
 %(3) it needs only $O(kn)$ memory space for temporary variables, thus can work on memory-constrained platforms.
 As modern general purpose GPUs have shown their extreme computational advantages in parallel computing, we implement the BT algorithm on single and multiple GPUs.
-With our carefully designed GPU kernels, the BT algorithm takes only 0.8 second to obtain all the singular values and vectors on a GeForce 750Ti for a single-precision matrix size of $10k$ by $10k$, and 1.5 seconds on Tesla K40c for a double-precision matrix of the same size.
-This is about $10$ times faster than MKL divide-and-conquer routine DBDSDC on $8$ general purpose cores, and $36$ times faster than CULA QR routine DBDSQR on the same GPUs.
+With our carefully designed GPU kernels, the BT algorithm is about $10$ times faster than MKL divide-and-conquer routine DBDSDC on $8$ general purpose cores, and $36$ times faster than CULA QR routine DBDSQR on the same GPUs.
 Additionally,  the BT algorithm is able to compute SVD for matrices of size $1$ million by $1$ million with only two GPUs.
 To the best of our knowledge, no implementation has achieved such a scale.
 
