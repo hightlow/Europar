@@ -1,23 +1,17 @@
 \section{Experimental Results}
 \label{sec:results}
-In this section, we evaluate the performance of our bisection and twisted
-algorithm and compare it with prior SVD implementations on CPUs and GPUs.
-We also evaluate the performance of BT on huge matrices 
-of size more than $100K$. To our knowledge, this has not been done in
-any of the prior work so far. 
-In addition, we discuss the GPU kernel profiling results to show
-how to further optimize our implementations. 
-% {\bf FIXME up to 500K in size (we should be able to scale up more, is it because we have only two GPUs?)}.
+In this section, we evaluate the performance of our bisection and twisted algorithm and compare it with prior SVD implementations on CPUs and GPUs.
+We also evaluate the performance of BT on huge matrices of size more than $100K$. 
+To our knowledge, this has not been done in any of the prior work so far. 
+%In addition, we discuss the GPU kernel profiling results to show how to further optimize our implementations. 
 
 We implement the proposed BT algorithm on three different GPUs: GeForce 750 Ti, Quadro 600 and Tesla K40c,
 which differ in architecture, memory size and bandwidth.
-Their specifications are listed in Table \ref{tab:spec}. In our
-implementations, we set the number of threads per GPU block as 512, 
-which brings the better performance than other possible block sizes.
-For the multi-GPU version of BT, we use a mixture of these GPUs that 
-reside in the same server to scale up the size of matrices. It is worth
-noting that our multi-GPU version of BT algorithm can be extended to 
-physically distributed GPUs, i.e., GPUs on different hosts connected via a high speed network. This part is however beyond the scope of this paper. 
+Their specifications are listed in Table \ref{tab:spec}. 
+In our implementations, we set the number of threads per GPU block as 512, which brings the better performance than other possible block sizes.
+For the multi-GPU version of BT, we use a mixture of these GPUs that reside in the same server to scale up the size of matrices. 
+%It is worth noting that our multi-GPU version of BT algorithm can be extended to physically distributed GPUs, i.e., GPUs on different hosts connected via a high speed network. 
+%This part is however beyond the scope of this paper. 
 \begin{table}[h]
 \caption{Specifications of Different GPUs}
 \centering
@@ -37,27 +31,19 @@ Mem Bandwidth  &   86.4 GB/s &   25.6 GB/s &  288 GB/s \\ \hline
 
 \subsection{Comparison to Existing SVD Implementations}
 We generate random bidiagonal matrices with double precision numbers in the range between 0 and 1.
-In order to achieve high confidence on the results, we generate 10
-random matrices, and
-for each matrix, our SVD algorithm is executed 10 times on a GPU (or two GPUs).
+In order to achieve high confidence on the results, we generate 10 random matrices, and for each matrix, our SVD algorithm is executed 10 times on a GPU (or two GPUs).
 %The average performance does not vary much when more matrices and more times are used.
-The standard deviation of their execution time is very small, so we report
-the average execution time across the 100 runs as the performance results.
+The standard deviation of their execution time is very small, so we report the average execution time across the 100 runs as the performance results.
 
-We compare our algorithm with CULA GPU library \cite{cula}, Intel MKL
-library \cite{mkl}, Sheetal's QR implementation on S1070 \cite{09IPDPSQR},
-and Liu's DC implementation on M2070 \cite{13CFDC}.
-We measure the performance of CULA on Tesla K40c, and that of Intel
-MKL on an 8-core 2.53GHz CPU.
+We compare our algorithm with CULA GPU library \cite{cula}, Intel MKL library \cite{mkl}, Sheetal's QR implementation on S1070 \cite{09IPDPSQR}, and Liu's DC implementation on M2070 \cite{13CFDC}.
+We measure the performance of CULA on Tesla K40c, and that of Intel MKL on an 8-core 2.53GHz CPU.
 Until now, CULA library only has a QR based routine called culaDbdsqr.
-Intel MKL library has both DC routine DBDSDC and QR routine DBDSQR.
-Usually DC routine is faster than QR routine, so we select DBDSDC for a comparison instead of DBDSQR.
-For Sheetal's implementation, we use the experimental results of diagonalization listed in the table of their paper.
-The results of Liu's are derived from their results presented in \cite{13CFDC}.
+Intel MKL library has both DC routine DBDSDC and QR routine DBDSQR. We select a faster routine DBDSDC for a comparison.
+For Sheetal's \cite{09IPDPSQR} and Liu's \cite{13CFDC} implementation, we use the experimental results presendted in their paper. 
 
 \begin{figure}[hbpt]
 \centering
-\includegraphics[width=0.36\textwidth]{svd_speedup}
+\includegraphics[width=0.5\textwidth]{svd_speedup}
 \caption{Overall Performance Comparison}
 \label{fig:svd_speedup}
 \vspace{-0.1in}
@@ -82,29 +68,24 @@ Now let us take a look at each of the algorithms from the perspective of matrix 
 \subsubsection{Singular Value Computation}
 \begin{figure}[hbpt]
 \centering
-%\includegraphics[width=0.5\textwidth]{svd_val_gpus_scaled}
-\includegraphics[width=0.36\textwidth]{svd_val_gpus}
-\caption{Execution time of singular value kernel on different GPUs}
-\label{fig:svd_val}
-\vspace{-0.1in}
+  \subfigure[Execution time]
+  {
+    \includegraphics[width=0.3\textwidth,height=1in]{svd_val_gpus}
+    \label{fig:svd_val}
+  }
+  \subfigure[Profiling Data]
+  {
+    \includegraphics[width=0.6\textwidth,height=1in]{svd_val_gpus_prof}
+    \label{fig:svd_val_prof}
+  }
+  \caption{Singular Value Kernel on Different GPUs}
+  \label{fig:svdval}
+\vspace{-0.2in}
 \end{figure}
+
 Figure \ref{fig:svd_val} shows the execution time of calculating singular values with our ``equal number division'' design on different GPUs with single-precision floating point.
 Quadro has the worst performance, while performance of GeForce and Tesla are close to each other.
 In particular, When the matrix size is less than $100K$, GeForce is slightly better. Otherwise, Tesla is better. 
-
-
-%{\bf FIXME} After we test with profiling tool, the ratio of thread activity on Quadro over GeForce is around 3, while the number of CUDA cores on GeForce is 6.6 times as that on Quadro.
-%Thus, the efficient CUDA cores on GeForce is 2.2 times as those on Quadro, which is also the speedup on GeForce over Quadro.
-
-
-\begin{figure}[hbpt]
-\centering
-\includegraphics[width=0.5\textwidth,height=1.5in]{svd_val_gpus_prof}
-\caption{Profiling Data of Singular Value Kernel on Different GPUs}
-%\textbf{NOTE : No point means cannot get profiling data, I want to get GFLOPS, but Tesla has no such data}}
-\label{fig:svd_val_prof}
-\vspace{-0.1in}
-\end{figure}
 
 To understand the reasons
 of such performance differences, we conduct a series of profiling experiments.
@@ -116,26 +97,15 @@ The main reason is that singular value computations rely on the fast shared memo
 of GPUs due to its low memory requirements. That is, finding the singular
 values is rather CPU-bound than memory-bound. 
 As a result, the performance is determined largely by the number of CUDA cores and the ratio of thread activity on a GPU.
-%As a result, the number of CUDA cores, and the ratio of thread activity on a GPU largely
-%determine the performance. 
-%Since GPU clock rate on Tesla is almost half of that on GeForce, we scale the results on Tesla to the same frequency on GeForce.
-%The dashed line in \ref{fig:svd_val} shows the scales results on Tesla.
-%After scaling, the execution time of both are close to each other.
-%This is also because that the number of CUDA cores, and the ratio of thread activity are similar 
-%on the two GPUs, if their core frequency is the same.
-%The ratio of thread activity around 3.5, which is equals to the CUDA cores ratio on two GPUs.
-%That means the effecient CUDA cores on both GPUs are nearly the same.
 
 \subsubsection{Singular Vector Computation}
 Figure \ref{fig:svd_vec} shows the execution time of singular vector kernel on different GPUs. 
-%It can be seen that GeForce has around 8X speedup compared to Quadro, since GeForce has a much %higher bandwidth.
 It is easily seen that GeForce is about 8 times faster than
 Quadro. This is because GeForce has a much higher memory bandwidth
 than Quadro.
 In addition, the device memory read/write transactions of GeForce are only 1/6 and 1/4 of those of Quadro, respectively.
 The performance on Tesla is slightly better than that on GeForce.
 Tesla has nearly the same device memory read transactions as GeForce does, while 3 times more write transactions than GeForce.
-%However, the high memory bandwidth of Tesla neutralizes the more transactions.
 Yet Tesla is still the winner of the three because of its extremely high
 bandwidth as listed in Table~\ref{tab:spec}.
 
@@ -143,16 +113,16 @@ bandwidth as listed in Table~\ref{tab:spec}.
 \centering
   \subfigure[Execution time]
   {
-    \includegraphics[width=0.3\textwidth,height=1.45in]{svd_vec_gpus}
+    \includegraphics[width=0.3\textwidth,height=1in]{svd_vec_gpus}
     \label{fig:svd_vec}
   }
   \subfigure[Profiling Data]
   {
-    \includegraphics[width=0.6\textwidth]{svd_vec_gpus_prof}
+    \includegraphics[width=0.6\textwidth,height=1in]{svd_vec_gpus_prof}
     \label{fig:svd_vec_prof}
   }
   \caption{Singular Vector Kernel on Different GPUs}
-  \label{fig:svd}
+  \label{fig:svdvec}
 \vspace{-0.2in}
 \end{figure}
 
