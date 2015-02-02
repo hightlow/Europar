@@ -4,30 +4,33 @@
 In this section, we evaluate the performance of our bisection and twisted algorithm and compare it with prior SVD implementations on CPUs and GPUs.
 %We also evaluate the performance of BT on huge matrices of size more than $100K$. 
 %To our knowledge, this has not been done in any of the prior work so far. 
-We implement the proposed BT algorithm on three different GPUs: GeForce 750 Ti, Quadro 600 and Tesla K40c,
-which differ in architecture, memory size and bandwidth listed in Table \ref{tab:spec}. 
+We implement the proposed BT algorithm on Tesla K40c with Kerpler architecture. 
+Our implementation can run on GeForce 750Ti with Maxwell architecture and Quandro with Fermi architecture. 
+%three different GPUs: GeForce 750 Ti, Quadro 600 and Tesla K40c,
+%which differ in architecture, memory size and bandwidth listed in Table \ref{tab:spec}. 
 In our implementations, we set the number of threads per GPU block as 512, which brings the better performance than other possible block sizes.
-For the multi-GPU version of BT, we use a mixture of these GPUs that reside in the same server to scale up the size of matrices. 
+For the multi-GPU version of BT, we use 2 Tesla K40c that reside in the same server to scale up the size of matrices. 
+%For the multi-GPU version of BT, we use a mixture of these GPUs that reside in the same server to scale up the size of matrices. 
 %It is worth noting that our multi-GPU version of BT algorithm can be extended to physically distributed GPUs, i.e., GPUs on different hosts connected via a high speed network. 
 %This part is however beyond the scope of this paper. 
-\begin{table}[h]
-\vspace{-0.2in}
-\caption{Specifications of Different GPUs}
-\vspace{-0.1in}
-\centering
-\begin{tabular}{|c|c|c|c|}
-\hline
-Specifications & GeForce 750 & Quandro 600 & Tesla K40 \\ \hline
+%\begin{table}[h]
+%\vspace{-0.2in}
+%\caption{Specifications of Different GPUs}
+%\vspace{-0.1in}
+%\centering
+%\begin{tabular}{|c|c|c|c|}
+%\hline
+%Specifications & GeForce 750 & Quandro 600 & Tesla K40 \\ \hline
 %Architecture   &     Maxwell &       Fermi &    Kepler \\ \hline
-CUDA Cores     &         640 &          96 &      2880 \\ \hline
-TFLOPS         &       1.306 &       0.246 &      4.29 \\ \hline
-GPU Clock      &    1268 MHz &    1280 MHz &   745 MHz \\ \hline
+%CUDA Cores     &         640 &          96 &      2880 \\ \hline
+%TFLOPS         &       1.306 &       0.246 &      4.29 \\ \hline
+%GPU Clock      &    1268 MHz &    1280 MHz &   745 MHz \\ \hline
 %Mem Size       &        2 GB &        1 GB &     12 GB \\ \hline
-Mem Bandwidth  &   86.4 GB/s &   25.6 GB/s &  288 GB/s \\ \hline
-\end{tabular}
-\label{tab:spec}
-\vspace{-0.5in}
-\end{table}
+%Mem Bandwidth  &   86.4 GB/s &   25.6 GB/s &  288 GB/s \\ \hline
+%\end{tabular}
+%\label{tab:spec}
+%\vspace{-0.5in}
+%\end{table}
 
 \subsection{Comparison to Existing SVD Implementations}
 We generate random bidiagonal matrices with double precision numbers in the range between 0 and 1.
@@ -139,13 +142,9 @@ We also observe that when the matrix size is larger than 2K, the thread utilizat
 This is because the ratio of stall caused by memory is 70\%, implying that there are a lot of threads waiting on data transfer.
 \fi 
 
-
 \subsection{Huge Size Result}
 Table \ref{tab:hugeResultTesla} shows the performance of huge size matrix with double-precision floating-point numbers on a single Tesla and two Tesla GPUs on a server. For two Telsa GPUs, we compared static workload allocation (50\%/50\%) and dynamic allocation where each GPU is tracked constantly by the host CPU and assigned new workload as soon as it finishes the current kernel. 
-%Results that the SVD of a 1 million by 1 million matrix can be calculated with a single Telsa in 54801 %seconds, and with two Telsa GPUs in 35607 seconds, a 1.54 speedup.
-When matrix size reaches 1 million by 1
-million our BT algorithm reaches the results in 54801 seconds
-with a single Telsa, and 35607 seconds with two Telsa GPUs. This is a 1.54X speedup.
+When matrix size reaches 1 million by 1 million our BT algorithm reaches the results in 54801 seconds with a single Telsa, and 35607 seconds with two Telsa GPUs. This is a 1.54X speedup.
 \begin{table}[h]
 \vspace{-0.3in}
 \caption{Performance of Huge Size Matrix with double floating-point on Tesla}
@@ -154,10 +153,10 @@ with a single Telsa, and 35607 seconds with two Telsa GPUs. This is a 1.54X spee
 \begin{tabular}{|c|c|c|c|}
 \hline
 Matrix Size &  Tesla  & Static & Dynamic \\ \hline
- 10K*10K    &   1.5s  &  1.9s / 1.2s &  0.9s / 2.5s \\ \hline
- 20K*20K    &   7.9s  &  7.4s / 5.7s &  3.1s / 10s \\ \hline
- 30K*30K    &    25s  &   17s /  14s &  12s  / 19s \\ \hline
- 40K*40K    &    38s  &   27s /  24s &  26s / 26s \\ \hline
+% 10K*10K    &   1.5s  &  1.9s / 1.2s &  0.9s / 2.5s \\ \hline
+% 20K*20K    &   7.9s  &  7.4s / 5.7s &  3.1s / 10s \\ \hline
+% 30K*30K    &    25s  &   17s /  14s &  12s  / 19s \\ \hline
+% 40K*40K    &    38s  &   27s /  24s &  26s / 26s \\ \hline
  50K*50K    &    71s  &   50s /  45s &  44s / 44s \\ \hline
 % 80K*80K    &   180s  &  121s / 103s &  111s / 116s \\ \hline
  100K*100K  &   341s  &  217s / 189s &  210s / 202s \\ \hline
@@ -186,12 +185,30 @@ method has two phases: (1) divide the interval into subintervals and
 %For the length division design, we selects the minimal execution time corresponding to red point curve in figure \ref{fig:length_block_num}.
 %For the number division design, we selects the minimal number of blocks that is able to allocated, since the execution time does not vary much between the minimal number of blocks and the optimal nubmer of blocks.
 \begin{figure}[hbpt]
+\vspace{-0.3in}
 \centering
-\includegraphics[width=0.4\textwidth]{compare_value_kernel}
-\caption{Comparison of Equal Length Division and Equal Number Division. ``Interval Division in EL'' is negligible. }
-\label{fig:compare_value_kernel}
-\vspace{-0.10in}
+  \subfigure[Comparison of Equal Length Division and Equal Number Division. ``Interval Division in EL'' is negligible.]
+  {
+    \includegraphics[width=0.4\textwidth]{compare_value_kernel}
+    \label{fig:compare_value_kernel}
+  }
+  \subfigure[Memory Transactions on Singular Vector Design]
+  {
+    \includegraphics[width=0.4\textwidth]{transaction}
+    \label{fig:transaction}
+  }
+\vspace{-0.1in}
+%  \caption{Orthogonality of Singular Vector}
+%  \label{fig:ortho}
+%\vspace{-0.3in}
 \end{figure}
+%\begin{figure}[hbpt]
+%\centering
+%\includegraphics[width=0.4\textwidth]{compare_value_kernel}
+%\caption{Comparison of Equal Length Division and Equal Number Division. ``Interval Division in EL'' is negligible. }
+%\label{fig:compare_value_kernel}
+%\vspace{-0.10in}
+%\end{figure}
 Figure \ref{fig:compare_value_kernel} shows the detailed execution time breakdown for each phase of both methods (``Interval Division'' time for ``equal-length division'' is negligible) on Tesla K40c.
 From the figure, we can see that when the matrix size is less than 9K, the equal length division version runs a little faster than equal number division version.
 However, when the matrix size exceeds 9K, the execution time of the equal length division version increases dramatically, while the execution time of equal number division version still rises linearly.
@@ -206,13 +223,13 @@ Thus, the equal number division version is obviously the winner when the matrix 
 \subsubsection{Memory Access Optimization}
 We evaluate the memory optimization techniques on improving the performance
 of singular vector calculation. As depicted in Figure \ref{fig:transaction},
-\begin{figure}[hbpt]
-\centering
-\includegraphics[width=0.4\textwidth]{transaction}
-\caption{Memory Transactions on Singular Vector Design}
-\label{fig:transaction}
-\vspace{-0.15in}
-\end{figure}
+%\begin{figure}[hbpt]
+%\centering
+%\includegraphics[width=0.4\textwidth]{transaction}
+%\caption{Memory Transactions on Singular Vector Design}
+%\label{fig:transaction}
+%\vspace{-0.15in}
+%\end{figure}
 in the baseline design,
 Global memory Load Transactions (GLT) are about twice of the Global memory Store Transactions (GST) on the global memory.
 As there are 50\% of global memory transfers are read-after-write, we improve the memory access performance by copying these values into the local memory and shared memory of the GPU. As a result, the GLT are reduced by 50\% compared to the baseline, while the GST remains the same, labeled as ``Read/Write Optimization'' in Figure \ref{fig:transaction}. The speedup on singular vector calculation reaches to 1.2X compared to the baseline.
@@ -220,7 +237,8 @@ Changing the matrix arrangement from row-major to column-major in the global mem
 reduces GLT and GST by 50\% and 25\%, respectively, compared to ``Read/Write optimization''. 
 This is because column-major matrix have coalesced global memory accesses, which saves hundreds of transactions per thread. The speedup rises up to 4.5X compared to the baseline.
 
-\subsubsection{Tolerance in Bisection Algorithm}
+\subsection{Accuracy Analysis}
+\subsection{Tolerance in Bisection Algorithm}
 Since the bisection algorithm is an approximate algorithm to calculate the singular values, we should test the effect of different error tolerance.
 The error tolerance $err$ means that the error between the singular values of our algorithm and the actual singular values are less than $err$.
 It determines the accuracy of singular value and therefore the orthogonality of singular vectors.
@@ -242,23 +260,24 @@ From the figure, we can see that when matrix size is smaller than 12000, the add
 When the matrix size is larger than 15000, the additional execution time is a little higher about $40 ms$ per level.
 
 \subsubsection{Orthogonality of Singular Vector}
-In this section, I will show the orthogonality of singular vectors.
-\subsubsection{Singular Value Computation}
+In this section, I will show the orthogonality of singular vectors. 
+The multiplication of singular vectors is shown in \ref{fig:ortho_img}. The white diagonal are 1s, and the black are 0s. 
+The error distribution of orthogonality is shown in \ref{fig:ortho_err}. Almost all the errors are close to 0.
 \begin{figure}[hbpt]
 \vspace{-0.3in}
 \centering
-  \subfigure[Orthogonal Error of Singular Vectors]
+  \subfigure[Orthogonal Error]
   {
-    \includegraphics[width=0.4\textwidth,height=1in]{ortho_err}
-    \label{fig:svd_val}
+    \includegraphics[width=0.4\textwidth]{ortho_err}
+    \label{fig:ortho_err}
   }
-  \subfigure[Image of Multiplication of Singular Vectors]
+  \subfigure[Image of Singular Vector Multiplication]
   {
-    \includegraphics[width=0.4\textwidth,height=1in]{orthogonal}
-    \label{fig:svd_val_prof}
+    \includegraphics[width=0.4\textwidth]{orthogonal}
+    \label{fig:ortho_img}
   }
 \vspace{-0.1in}
   \caption{Orthogonality of Singular Vector}
-  \label{fig:svdval}
+  \label{fig:ortho}
 \vspace{-0.3in}
 \end{figure}
