@@ -46,7 +46,7 @@ For Sheetal's \cite{09IPDPSQR} and Liu's \cite{13CFDC} implementation, we use th
 \begin{figure}[hbpt]
 \vspace{-0.3in}
 \centering
-\includegraphics[width=0.5\textwidth,height=1in]{svd_speedup}
+\includegraphics[width=0.5\textwidth]{svd_speedup}
 \vspace{-0.2in}
 \caption{Overall Performance Comparison}
 \label{fig:svd_speedup}
@@ -239,6 +239,29 @@ This is because column-major matrix have coalesced global memory accesses, which
 
 \subsection{Accuracy Analysis}
 \subsection{Tolerance in Bisection Algorithm}
+\begin{figure}[hbpt]
+\vspace{-0.3in}
+\centering
+  \subfigure[Average Extra Execution Time When the accuracy increase Performance Comparision]
+  {
+    \includegraphics[width=0.3\textwidth]{tolerance}
+    \label{fig:tolerance}
+  }
+  \subfigure[Orthogonal Error]
+  {
+    \includegraphics[width=0.3\textwidth]{ortho_err}
+    \label{fig:ortho_err}
+  }
+  \subfigure[Image of Singular Vector Multiplication]
+  {
+    \includegraphics[width=0.3\textwidth]{orthogonal}
+    \label{fig:ortho_img}
+  }
+\vspace{-0.1in}
+  \caption{Orthogonality of Singular Vector}
+  \label{fig:ortho}
+\vspace{-0.3in}
+\end{figure}
 Since the bisection algorithm is an approximate algorithm to calculate the singular values, we should test the effect of different error tolerance.
 The error tolerance $err$ means that the error between the singular values of our algorithm and the actual singular values are less than $err$.
 It determines the accuracy of singular value and therefore the orthogonality of singular vectors.
@@ -247,13 +270,6 @@ However, it is important to know the incremental execution time to determine whi
 We test our algorithm on different error tolerance.
 The error tolerance is between $10^{-5}$ to $10^{-16}$ with tenfolder decreasing.
 
-%\textbf{I'm still thinking how to draw this figure.}
-\begin{figure}[hbpt]
-\centering
-\includegraphics[width=0.5\textwidth]{tolerance}
-\caption{Average Extra Execution Time When the accuracy increase Performance Comparision}
-\label{fig:tolerance}
-\end{figure}
 Figure \ref{fig:tolerance} shows the average increased execution time when the accuracy of singular values goes up a higher level on different matrix size.
 In other word, it shows the average increased execution time when the error tolerance becomes smaller from $10^{-x}$ to $10^{-(x+1)}$.
 From the figure, we can see that when matrix size is smaller than 12000, the additional execution time is only less than $20 ms$ when the error tolerance rises a level.
@@ -263,21 +279,3 @@ When the matrix size is larger than 15000, the additional execution time is a li
 In this section, I will show the orthogonality of singular vectors. 
 The multiplication of singular vectors is shown in \ref{fig:ortho_img}. The white diagonal are 1s, and the black are 0s. 
 The error distribution of orthogonality is shown in \ref{fig:ortho_err}. Almost all the errors are close to 0.
-\begin{figure}[hbpt]
-\vspace{-0.3in}
-\centering
-  \subfigure[Orthogonal Error]
-  {
-    \includegraphics[width=0.4\textwidth]{ortho_err}
-    \label{fig:ortho_err}
-  }
-  \subfigure[Image of Singular Vector Multiplication]
-  {
-    \includegraphics[width=0.4\textwidth]{orthogonal}
-    \label{fig:ortho_img}
-  }
-\vspace{-0.1in}
-  \caption{Orthogonality of Singular Vector}
-  \label{fig:ortho}
-\vspace{-0.3in}
-\end{figure}
