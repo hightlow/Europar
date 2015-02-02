@@ -13,7 +13,9 @@ For the multi-GPU version of BT, we use a mixture of these GPUs that reside in t
 %It is worth noting that our multi-GPU version of BT algorithm can be extended to physically distributed GPUs, i.e., GPUs on different hosts connected via a high speed network. 
 %This part is however beyond the scope of this paper. 
 \begin{table}[h]
+\vspace{-0.2in}
 \caption{Specifications of Different GPUs}
+\vspace{-0.1in}
 \centering
 \begin{tabular}{|c|c|c|c|}
 \hline
@@ -26,7 +28,7 @@ Mem Size       &        2 GB &        1 GB &     12 GB \\ \hline
 Mem Bandwidth  &   86.4 GB/s &   25.6 GB/s &  288 GB/s \\ \hline
 \end{tabular}
 \label{tab:spec}
-\vspace{-0.1in}
+\vspace{-0.5in}
 \end{table}
 
 \subsection{Comparison to Existing SVD Implementations}
@@ -42,11 +44,13 @@ Intel MKL library has both DC routine DBDSDC and QR routine DBDSQR. We select a 
 For Sheetal's \cite{09IPDPSQR} and Liu's \cite{13CFDC} implementation, we use the experimental results presendted in their paper. 
 
 \begin{figure}[hbpt]
+\vspace{-0.3in}
 \centering
 \includegraphics[width=0.5\textwidth]{svd_speedup}
+\vspace{-0.2in}
 \caption{Overall Performance Comparison}
 \label{fig:svd_speedup}
-\vspace{-0.1in}
+\vspace{-0.3in}
 \end{figure}
 Figure \ref{fig:svd_speedup} shows the performance comparison of BT
 implementation on Tesla K40c GPU to other existing libraries
@@ -67,6 +71,7 @@ Now let us take a look at each of the algorithms from the perspective of matrix 
 
 \subsubsection{Singular Value Computation}
 \begin{figure}[hbpt]
+\vspace{-0.3in}
 \centering
   \subfigure[Execution time]
   {
@@ -78,9 +83,10 @@ Now let us take a look at each of the algorithms from the perspective of matrix 
     \includegraphics[width=0.6\textwidth,height=1in]{svd_val_gpus_prof}
     \label{fig:svd_val_prof}
   }
+\vspace{-0.1in}
   \caption{Singular Value Kernel on Different GPUs}
   \label{fig:svdval}
-\vspace{-0.2in}
+\vspace{-0.3in}
 \end{figure}
 
 Figure \ref{fig:svd_val} shows the execution time of calculating singular values with our ``equal number division'' design on different GPUs with single-precision floating point.
@@ -110,6 +116,7 @@ Yet Tesla is still the winner of the three because of its extremely high
 bandwidth as listed in Table~\ref{tab:spec}.
 
 \begin{figure}[hbpt]
+\vspace{-0.3in}
 \centering
   \subfigure[Execution time]
   {
@@ -121,9 +128,10 @@ bandwidth as listed in Table~\ref{tab:spec}.
     \includegraphics[width=0.6\textwidth,height=1in]{svd_vec_gpus_prof}
     \label{fig:svd_vec_prof}
   }
+\vspace{-0.1in}
   \caption{Singular Vector Kernel on Different GPUs}
   \label{fig:svdvec}
-\vspace{-0.2in}
+\vspace{-0.3in}
 \end{figure}
 
 Figure \ref{fig:svd_vec_prof} shows thread and memory bandwidth utilizations of singular vector design on different GPUs. 
@@ -132,6 +140,7 @@ We also observe that when the matrix size is larger than 2K, the thread utilizat
 This is because the ratio of stall caused by memory is 70\%, implying that there are a lot of threads waiting on data transfer.
 
 
+\if 0
 \subsection{Performance on a Multi-GPU Platform}
 
 %Scaling the BT algorithm with multiple GPUs is our solution to
@@ -143,7 +152,6 @@ As in our experimental platform, the multiple GPUs in a server may differ
 in architecture and performance, thus we need to balance the load on them
 to achieve the best speedup.
 
-\if 0
 \subsubsection{Load Balance}
 Figure \ref{fig:pthread} shows the total execution times with load distributed to the two GPUs
 (Quadro 600 and GeForce 750 Ti) for different matrix sizes on our server.
@@ -170,7 +178,7 @@ GeForce has 5 times more effective cores than Quadro.
 \end{figure}
 \fi
 
-\subsubsection{Huge Size Result}
+\subsection{Huge Size Result}
 \if 0
 Table \ref{tab:hresult} gives the execution times for huge size matrices on a single GeForce, a single Quadra, and both of them with the optimal load balancing as shown in Figure~\ref{fig:pthread}.
 When the matrix size is larger than 100K, a single Quadro is not able to calculate the whole SVD.
@@ -211,7 +219,9 @@ When matrix size reaches 1 million by 1
 million our BT algorithm reaches the results in 54801 seconds
 with a single Telsa, and 35607 seconds with two Telsa GPUs. This is a 1.54X speedup.
 \begin{table}[h]
+\vspace{-0.3in}
 \caption{Performance of Huge Size Matrix with double floating-point on Tesla}
+\vspace{-0.1in}
 \centering
 \begin{tabular}{|c|c|c|c|}
 \hline
@@ -235,9 +245,8 @@ Matrix Size &  Tesla  & Static & Dynamic \\ \hline
  1000K*1000K & 54801s  & 36119s / 35071s   &  35587s / 35607s \\ \hline
 \end{tabular}
 \label{tab:hugeResultTesla}
-\vspace{-0.15in}
+\vspace{-0.5in}
 \end{table}
-
 
 \subsection{Profiling Analysis of GPU Kernels}
 

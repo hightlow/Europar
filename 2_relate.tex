@@ -1,6 +1,6 @@
 \section{Related Work}
 \label{sec:related}
-General purpose GPUs have become important processing engines for computationally intensive workloads due to their highly parallel computing architectures.
+General purpose GPUs become important processing engines for computationally intensive workloads due to their highly parallel computing architectures.
 %Linear algebra operations are among the first batch of libraries accelerated with GPUs.
 %There are various such accelerated libraries, i.e.,  CUBLAS, CULA, MAGMA. 
 %CUBLAS (Basic Linear Algebra Subprograms) are routines supported by Nvidia \cite{cublas} that provide standard building blocks for performing basic vector and matrix operations. 
@@ -27,7 +27,7 @@ It is almost 7 times faster than CULA QR algorithm executing on the same device 
 %In the worst case, it will require $O(n^3)$ to complete SVD, if the singular values are in a dense distribution\cite{97bookalgebra}.
 %This is because the implementation that makes use of pipeline architecture in a heterogeneous architecture does not make full use of resources on GPUs and the frequent data transfer between GPU and CPU dramatically slow down the execution time.
 Vedran\cite{14arxivjacobi} presents a hierarchically blocked one-sided Jacobi algorithm for the singular value decomposition on both single and multiple GPU architectures. 
-The algorithm maintains high accuracy in singular values and vectors. Due to the speed limitation of the algorithm, even with full optimizations and a high speedup compared to the same algorithm on CPU, the execution time is still more than that of Sheetal's QR implementation.
+%The algorithm maintains high accuracy in singular values and vectors. Due to the speed limitation of the algorithm, even with full optimizations and a high speedup compared to the same algorithm on CPU, the execution time is still more than that of Sheetal's QR implementation.
 
 Drineas et al. \cite{99clustering} provide a clustered SVD algorithm for large matrices. The algorithm divides a set of $n$ points into $k$ clusters, where $k$ is much less than $n$ on CPU.
 It is an approximation algorithm to obtain only one subset of singular values
