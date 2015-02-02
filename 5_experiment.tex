@@ -1,13 +1,11 @@
-\section{Experimental Results}
-\label{sec:results}
+\vspace{-0.1in}
+\section{Experimental Results} \label{sec:results}
+\vspace{-0.1in}
 In this section, we evaluate the performance of our bisection and twisted algorithm and compare it with prior SVD implementations on CPUs and GPUs.
-We also evaluate the performance of BT on huge matrices of size more than $100K$. 
-To our knowledge, this has not been done in any of the prior work so far. 
-%In addition, we discuss the GPU kernel profiling results to show how to further optimize our implementations. 
-
+%We also evaluate the performance of BT on huge matrices of size more than $100K$. 
+%To our knowledge, this has not been done in any of the prior work so far. 
 We implement the proposed BT algorithm on three different GPUs: GeForce 750 Ti, Quadro 600 and Tesla K40c,
-which differ in architecture, memory size and bandwidth.
-Their specifications are listed in Table \ref{tab:spec}. 
+which differ in architecture, memory size and bandwidth listed in Table \ref{tab:spec}. 
 In our implementations, we set the number of threads per GPU block as 512, which brings the better performance than other possible block sizes.
 For the multi-GPU version of BT, we use a mixture of these GPUs that reside in the same server to scale up the size of matrices. 
 %It is worth noting that our multi-GPU version of BT algorithm can be extended to physically distributed GPUs, i.e., GPUs on different hosts connected via a high speed network. 
@@ -20,11 +18,11 @@ For the multi-GPU version of BT, we use a mixture of these GPUs that reside in t
 \begin{tabular}{|c|c|c|c|}
 \hline
 Specifications & GeForce 750 & Quandro 600 & Tesla K40 \\ \hline
-Architecture   &     Maxwell &       Fermi &    Kepler \\ \hline
+%Architecture   &     Maxwell &       Fermi &    Kepler \\ \hline
 CUDA Cores     &         640 &          96 &      2880 \\ \hline
 TFLOPS         &       1.306 &       0.246 &      4.29 \\ \hline
 GPU Clock      &    1268 MHz &    1280 MHz &   745 MHz \\ \hline
-Mem Size       &        2 GB &        1 GB &     12 GB \\ \hline
+%Mem Size       &        2 GB &        1 GB &     12 GB \\ \hline
 Mem Bandwidth  &   86.4 GB/s &   25.6 GB/s &  288 GB/s \\ \hline
 \end{tabular}
 \label{tab:spec}
@@ -34,7 +32,6 @@ Mem Bandwidth  &   86.4 GB/s &   25.6 GB/s &  288 GB/s \\ \hline
 \subsection{Comparison to Existing SVD Implementations}
 We generate random bidiagonal matrices with double precision numbers in the range between 0 and 1.
 In order to achieve high confidence on the results, we generate 10 random matrices, and for each matrix, our SVD algorithm is executed 10 times on a GPU (or two GPUs).
-%The average performance does not vary much when more matrices and more times are used.
 The standard deviation of their execution time is very small, so we report the average execution time across the 100 runs as the performance results.
 
 We compare our algorithm with CULA GPU library \cite{cula}, Intel MKL library \cite{mkl}, Sheetal's QR implementation on S1070 \cite{09IPDPSQR}, and Liu's DC implementation on M2070 \cite{13CFDC}.
@@ -46,7 +43,7 @@ For Sheetal's \cite{09IPDPSQR} and Liu's \cite{13CFDC} implementation, we use th
 \begin{figure}[hbpt]
 \vspace{-0.3in}
 \centering
-\includegraphics[width=0.5\textwidth]{svd_speedup}
+\includegraphics[width=0.5\textwidth,height=1in]{svd_speedup}
 \vspace{-0.2in}
 \caption{Overall Performance Comparison}
 \label{fig:svd_speedup}
@@ -67,6 +64,8 @@ DC implementation on CPU, 4 to 7.2 over the Liu's
 DC method on GPU, and 15 to 288 over the QR implementation in the work by Sheetal et al.
 Now let us take a look at each of the algorithms from the perspective of matrix size, Sheetal's QR implementation and Liu's DC implementation do not work at all when the dimensions of matrices are larger than 14K by 14K on their GPU with memory size of 16GB and 6GB, respectively. In contrast, in our implementation, the matrix size could reach 1 million by 1 million as shown in Table \ref{tab:hugeResultTesla}.
 
+\if 0
+\vspace{-0.2in}
 \subsection{Performance Comparison on Different GPUs}
 
 \subsubsection{Singular Value Computation}
@@ -138,81 +137,10 @@ Figure \ref{fig:svd_vec_prof} shows thread and memory bandwidth utilizations of 
 We can see from the figure that Quadro and GeForce reach a high memory utilization (80\%-99\%), while the memory utilization of Tesla is around 30\%. 
 We also observe that when the matrix size is larger than 2K, the thread utilization keeps stable on Quadro. 
 This is because the ratio of stall caused by memory is 70\%, implying that there are a lot of threads waiting on data transfer.
+\fi 
 
-
-\if 0
-\subsection{Performance on a Multi-GPU Platform}
-
-%Scaling the BT algorithm with multiple GPUs is our solution to
-%matrices of substantial large sizes such as 1 million on each dimension.
-Our solution for matrices of substantially larger sizes such
-as 1 million on each dimension is to scale the BT algorithm
-with multiple GPUs.
-As in our experimental platform, the multiple GPUs in a server may differ
-in architecture and performance, thus we need to balance the load on them
-to achieve the best speedup.
-
-\subsubsection{Load Balance}
-Figure \ref{fig:pthread} shows the total execution times with load distributed to the two GPUs
-(Quadro 600 and GeForce 750 Ti) for different matrix sizes on our server.
-The x-axis represents the percentage of singular vectors calculated on Quadro 600 (with the rest on GeForce 750 Ti).
-The y-axis is the execution time.
-%The red cycles highlight the minimum execution time of possible workload distributions.
-%The blue curves can be separated into two parts by red points.
-%The left ones are dominated by GeForce 750 Ti, while the right ones are contributed by Quadro 600.
-%Since Quadro 600 has a worse performance than GeForce 750 Ti, less work is allocated on it.
-%We can see that for matrices larger than 3K, a 16\%-84\% partition of the workload
-%on Quadro 600 and GeForce 750 Ti yields the best performance. 
-A red cycle
-highlights the spot where minimum execution time is reached
-for each matrix size. We can see that for matrices larger than
-3K, a partition of 15\% (Quadro) vs. 85\% (GeForce) yields the
-best performance. We believe that this is because 
-GeForce has 5 times more effective cores than Quadro.
-\begin{figure}[hbpt]
-\centering
-\includegraphics[width=0.38\textwidth]{pthread}
-\caption{Load Balance on GeForce and Quadro}
-\label{fig:pthread}
-\vspace{-0.15in}
-\end{figure}
-\fi
 
 \subsection{Huge Size Result}
-\if 0
-Table \ref{tab:hresult} gives the execution times for huge size matrices on a single GeForce, a single Quadra, and both of them with the optimal load balancing as shown in Figure~\ref{fig:pthread}.
-When the matrix size is larger than 100K, a single Quadro is not able to calculate the whole SVD.
-The GeForce can calculate the whole SVD until the matrix size reaches to 200K.
-When the matrix size becomes larger than 200K, our bisection algorithm on GeForce cannot converge due to the accuracy of IEEE single-precision floating point number on GeForce.
-When we use double-precision floating numbers on Tesla, our BT implementation works well even when the matrix size reaches one million.
-%The GeForce has 4-5X speedup compared to Quadro.
-%The right column shows the best execution time and its corresponding workload on two GPUs.
-%GeForce is responsible for 80\%-85\% workload, and Quadro taks other part.
-%The speedup of 2 GPUs over GeForce is around 1.2.
-
-\begin{table}[h]
-\caption{Performance with Very Large Matrix Sizes}
-\centering
-\begin{tabular}{|c|c|c|c|}
-\hline
-Matrix Size & GeForce & Quadro & GeForce + Quadro \\ \hline
-% 10K*10K    &   0.8s  &  4.6s  &   0.7s (85\%) / 0.7s (15\%) \\ \hline
-% 20K*20K    &   2.9s  &   18s  &   2.6s (85\%) / 2.7s (15\%) \\ \hline
-% 30K*30K    &   6.7s  &   37s  &   5.9s (85\%) / 5.6s (15\%) \\ \hline
-% 40K*40K    &    12s  &   63s  &    10s (85\%) / 9.5s (15\%) \\ \hline
- 50K*50K    &    19s  &   96s  &    16s (84\%) /  15s (16\%) \\ \hline
- 80K*80K    &    50s  &  238s  &    43s (84\%) /  40s (16\%) \\ \hline
- 100K*100K  &    84s  &  393s  &    71s (83\%) /  67s (17\%) \\ \hline
- 120K*120K  &   134s  &     -  &   113s (82\%) / 102s (18\%) \\ \hline
- 150K*150K  &   245s  &     -  &   203s (81\%) / 194s (19\%) \\ \hline
- 180K*180K  &   412s  &     -  &   340s (80\%) / 337s (20\%) \\ \hline
- 200K*200K  &   555s  &     -  &   453s (80\%) / 450s (20\%)  \\ \hline
-\end{tabular}
-\label{tab:hresult}
-\vspace{-0.22in}
-\end{table}
-\fi
-
 Table \ref{tab:hugeResultTesla} shows the performance of huge size matrix with double-precision floating-point numbers on a single Tesla and two Tesla GPUs on a server. For two Telsa GPUs, we compared static workload allocation (50\%/50\%) and dynamic allocation where each GPU is tracked constantly by the host CPU and assigned new workload as soon as it finishes the current kernel. 
 %Results that the SVD of a 1 million by 1 million matrix can be calculated with a single Telsa in 54801 %seconds, and with two Telsa GPUs in 35607 seconds, a 1.54 speedup.
 When matrix size reaches 1 million by 1
@@ -226,11 +154,11 @@ with a single Telsa, and 35607 seconds with two Telsa GPUs. This is a 1.54X spee
 \begin{tabular}{|c|c|c|c|}
 \hline
 Matrix Size &  Tesla  & Static & Dynamic \\ \hline
-% 10K*10K    &   1.5s  &  1.9s / 1.2s &  0.9s / 2.5s \\ \hline
-% 20K*20K    &   7.9s  &  7.4s / 5.7s &  3.1s / 10s \\ \hline
-% 30K*30K    &    25s  &   17s /  14s &  12s  / 19s \\ \hline
-% 40K*40K    &    38s  &   27s /  24s &  26s / 26s \\ \hline
-% 50K*50K    &    71s  &   50s /  45s &  44s / 44s \\ \hline
+ 10K*10K    &   1.5s  &  1.9s / 1.2s &  0.9s / 2.5s \\ \hline
+ 20K*20K    &   7.9s  &  7.4s / 5.7s &  3.1s / 10s \\ \hline
+ 30K*30K    &    25s  &   17s /  14s &  12s  / 19s \\ \hline
+ 40K*40K    &    38s  &   27s /  24s &  26s / 26s \\ \hline
+ 50K*50K    &    71s  &   50s /  45s &  44s / 44s \\ \hline
 % 80K*80K    &   180s  &  121s / 103s &  111s / 116s \\ \hline
  100K*100K  &   341s  &  217s / 189s &  210s / 202s \\ \hline
 % 120K*120K  &   524s  &  326s / 286s &  311s / 311s \\ \hline
@@ -245,7 +173,7 @@ Matrix Size &  Tesla  & Static & Dynamic \\ \hline
  1000K*1000K & 54801s  & 36119s / 35071s   &  35587s / 35607s \\ \hline
 \end{tabular}
 \label{tab:hugeResultTesla}
-\vspace{-0.5in}
+\vspace{-0.2in}
 \end{table}
 
 \subsection{Profiling Analysis of GPU Kernels}
@@ -292,25 +220,6 @@ Changing the matrix arrangement from row-major to column-major in the global mem
 reduces GLT and GST by 50\% and 25\%, respectively, compared to ``Read/Write optimization''. 
 This is because column-major matrix have coalesced global memory accesses, which saves hundreds of transactions per thread. The speedup rises up to 4.5X compared to the baseline.
 
-\if 0
-\subsubsection{Comparasion of Singular Vector Designs}
-Figure \ref{fig:vector_kernels} shows the impact of memory optimizations on singular vector computation.
-The column-major matrix with local memory has a better performance than the other versions.
-%\begin{figure}[hbpt]
-%\centering
-%\includegraphics[width=0.5\textwidth]{transaction}
-%\caption{Transactions on Singular Vector Design}
-%\label{fig:transaction}
-%\end{figure}
-\begin{figure}[hbpt]
-\centering
-\includegraphics[width=0.5\textwidth]{vector_kernels}
-\caption{Performance on Singular Vector Kernels}
-\label{fig:vector_kernels}
-\end{figure}
-\fi
-
-\if 0
 \subsubsection{Tolerance in Bisection Algorithm}
 Since the bisection algorithm is an approximate algorithm to calculate the singular values, we should test the effect of different error tolerance.
 The error tolerance $err$ means that the error between the singular values of our algorithm and the actual singular values are less than $err$.
@@ -331,54 +240,25 @@ Figure \ref{fig:tolerance} shows the average increased execution time when the a
 In other word, it shows the average increased execution time when the error tolerance becomes smaller from $10^{-x}$ to $10^{-(x+1)}$.
 From the figure, we can see that when matrix size is smaller than 12000, the additional execution time is only less than $20 ms$ when the error tolerance rises a level.
 When the matrix size is larger than 15000, the additional execution time is a little higher about $40 ms$ per level.
-\fi
 
-
-\if 0
-\subsubsection{Optimal Block Size}
-In our ``equal length division'' design for singular value computation, the size of a block heavily determines the execution time because the most time-consuming block is the critical path. 
-We conduct a series of experiments to obtain the optimal block size for different matrices.
-%\begin{figure}[hbpt]
-%\centering
-%\includegraphics[width=0.5\textwidth]{length_block_single}
-%\caption{The optimal block number of different matrix size with single precision on GeForce 750 Ti}
-%\label{fig:length_block_single}
-%\end{figure}
+\subsubsection{Orthogonality of Singular Vector}
+In this section, I will show the orthogonality of singular vectors.
+\subsubsection{Singular Value Computation}
 \begin{figure}[hbpt]
+\vspace{-0.3in}
 \centering
-\includegraphics[width=0.5\textwidth]{length_block_num}
-\caption{The optimal block number of different matrix size with double precision on Tesla K40c}
-\label{fig:length_block_num}
+  \subfigure[Orthogonal Error of Singular Vectors]
+  {
+    \includegraphics[width=0.4\textwidth,height=1in]{ortho_err}
+    \label{fig:svd_val}
+  }
+  \subfigure[Image of Multiplication of Singular Vectors]
+  {
+    \includegraphics[width=0.4\textwidth,height=1in]{orthogonal}
+    \label{fig:svd_val_prof}
+  }
+\vspace{-0.1in}
+  \caption{Orthogonality of Singular Vector}
+  \label{fig:svdval}
+\vspace{-0.3in}
 \end{figure}
-Figure \ref{fig:length_block_num} shows the execution time of obtaining all the singular values with different number of blocks for a variety of matrix sizes on GPU Tesla K40c with double precision.
-The blue wavy curves show the relationship between the execution time and the number of blocks (the matrix size listed on the right side).
-From the curves, we can see that the execution time rises when the number of blocks increases.
-The left point of the wavy curve shows the minimal number of blocks should be allocated when the matrix size is identified.
-In other words, the number of blocks should not be less than the left point on the wavy curves.
-When matrix size becomes large, the left point in wave curve trends to a large number of blocks.
-
-The red circle curve in the figure shows the optimal number of blocks with minimal execution time on different size.
-we can see that the optimal number of blocks increases when matrix size is less than $3k$,
-keeps stable when matrix size is in the range of $3k$ to $9k$,
-and becomes the minimal number of blocks when matrix size is lager than $9K$.
-Actually, when the block number is close to the optimal number, the execution time does not change too much.
-Due to the uncertainty of the input matrix, the optimal block number may vary slightly.
-Thus, it is not necessary to select the exact optimal block number.
-But it is better to select the number of blocks around the optimal one.
-
-%Figure \ref{fig:length_block_single} is another experimental results on GeForce 750 Ti GPU with single precision.
-%The curves are very similar with the curves in Figure \ref{fig:length_block_num}.
-%However, the optimal number of blocks shifts right to be a large number because GeForce has a better architecture than Tesla.
-%The reason of the optimal number of blocks is determined by the CUDA cores.
-%The Tesla K40c has 15 multiprocessors (MP) and 192 CUDA cores per MP.
-%Thus, the total CUDA cores are $2880$ in Tesla K40.
-%The GPU code is actually executed in groups of 32 threads called a warp concurrently.
-
-%The optimal GPU block size is not the less, the better.
-%It depends on the number of singular values in the subintervals.
-%If one have more, GPU will have to wait.
-%If all subintervals have the number of singular deviate from the integer multiples of a warp. The GPU efficiency will be less.
-
-\fi
-
-

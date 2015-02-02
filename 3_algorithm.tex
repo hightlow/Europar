@@ -1,11 +1,7 @@
-\section{Bisection and Twisted Algorithm}
-\label{sec:algorithm}
+\vspace{-0.1in}
+\section{Bisection and Twisted Algorithm} \label{sec:algorithm}
+\vspace{-0.1in}
 For an arbitrary matrix $A\in \mathbb{R}^{m \times n} (m>n)$, we can decompose $A$ as follows:
-% all SVD algorithms discussed in section \ref{sec:intro} consist of two steps:
-%The first step is to reduce the initial matrix $A$ to bidiagonal form using Householder transformation.
-%The second step is to reduce the bidiagonal matrix into a diagonal matrix.
-
-%By applying the Householder transformation, we can decompose the matrix $A$ as follows:
 \begin{equation}
 \label{H-transform}
 A = Q B P^T ,
@@ -31,51 +27,38 @@ The bisection and twisted algorithm is divided into two phases:
 (2) obtain the corresponding left and right singular vectors of every singular value by twisted factorization.
 Next we illustrate these two phases in the following subsections.
 
+\vspace{-0.1in}
 \subsection{Bisection Algorithm}
-%Bisection algorithm is widely used in many applications to find the roots of a sophisticated equation that cannot be solved directly.
-%It repeatedly bisects an interval and then selects a subinterval in which a root lies for further processing until convergence.
-%Bisection is an approximation algorithm for solving sophisticated equation and can reach certain relative accuracy solution.
-
+\vspace{-0.1in}
 Suppose $B$ is an upper bidiagonal $n \times n$ matrix with elements $b_{i,j}$ reduced by Householder transform \cite{10householder}.
 The matrix $T = B^T B - \mu^2 I_n$ can be decomposed as
 \begin{equation}
 \label{eq:T}
 T = B^T B - \mu^2 I_n = L D L^T ,
 \end{equation}
-where $\mu$ is a shift variable, $D$ is $diag(d_{1}, \cdots, d_{n})$, and 
-%\[ D =  \left( \begin{array}{cccc}
-%d_{1} & 0     & \cdots & 0 \\
-%0     & d_{2} & \cdots & 0 \\
-%\vdots& \vdots& \ddots & \vdots \\
-%    0 & 0     & \cdots & d_{n} \end{array} \right),
-\begin{equation}
+where $\mu$ is a shift variable, $D$ and $L$ are as below.
+\vspace{-0.1in}
+\[ D =  \left( \begin{array}{cccc}
+d_{1} & 0     & \cdots & 0 \\
+0     & d_{2} & \cdots & 0 \\
+\vdots& \vdots& \ddots & \vdots \\
+    0 & 0     & \cdots & d_{n} \end{array} \right), \;\;\;\;
  L =  \left( \begin{array}{ccccc}
      1&      &       &        &  \\
  l_{1}& 1    &       & 0      &  \\
       & l_{2}& \ddots&        &  \\
       & 0    & \ddots& \ddots &  \\
       &      &       & l_{n-1}& 1
-\end{array} \right) .
-\label{eq:l}
-\end{equation}
-By substituting $L$ and $D$ into Eq. (\ref{eq:T}), we can obtain the following equations
-\begin{equation}
-\left \{
-\begin{aligned}
+\vspace{-0.1in}
+\end{array} \right) \label{eq:l} \]
+By substituting $L$ and $D$ into Eq. (\ref{eq:T}), we can get the following equations
+\[ \left \{ \begin{aligned}
 b_{1,1}^2 - \mu^2 &= d_1\\
 b_{k-1,k-1} b_{k-1,k} &= d_{k-1} l_{k-1}\\
 b_{k-1,k}^2 + b_{k,k}^2 - \mu^2 &= l_{k-1}^2 d_{k-1} + d_k
-\end{aligned}
-\right .
-\label{eq:ldl}
-\end{equation}
+\end{aligned} \right . \label{eq:ldl} \]
 where $k = 2,3,\cdots,n$.
-Next, we define an auxiliary values $t_{k}$ as
-\begin{equation}
-t_{k} = t_{k-1} * (b_{k-1,k}^2 / d_{k-1}) - \mu^2 ,
-\label{eq:tmp}
-\end{equation}
-and then all the equations in Eq. (\ref{eq:ldl}) reduce to
+Next, we define an auxiliary values $t_{k} = t_{k-1} * (b_{k-1,k}^2 / d_{k-1}) - \mu^2$, and then all the equations in Eq. (\ref{eq:ldl}) reduce to
 \begin{equation}
 \left \{
 \begin{aligned}
@@ -140,33 +123,32 @@ $NegCount(\mu)$ is also the number of the singular values of $B$ which are less 
 %On the other hand, too small value for $\tau$ may fail to reach the required accuracy.
 %Based on our tests, we can obtain the singular values with error tolerance less than $10^{-16}$.
 
+\vspace{-0.2in}
 \subsection{Twisted Algorithm}
-
-The second phase of our algorithm, twisted algorithm, calculates the corresponding singular vectors.
-It has advantages over existing approaches such as the power method\cite{08power}, which can only find the largest singular value and the corresponding singular vector, and inverse iteration\cite{11iterative}, which does not guarantee the accuracy and orthognality of the singular vectors when the singular values are clustered. In contrast, the twisted algorithm can calculate  orthogonal singular vectors with adequate accuracy \cite{09NLAAtwisted}. 
+\vspace{-0.1in}
+%The second phase of our algorithm, twisted algorithm, calculates the corresponding singular vectors.
+%It has advantages over existing approaches such as the power method\cite{08power}, which can only find the largest singular value and the corresponding singular vector, and inverse iteration\cite{11iterative}, which does not guarantee the accuracy and orthognality of the singular vectors when the singular values are clustered. In contrast, the twisted algorithm can calculate  orthogonal singular vectors with adequate accuracy \cite{09NLAAtwisted}. 
 
 Suppose $\lambda$ is a singular value of bidiagonal matrix $B \in R^{n \times n}$.
 Then the matrix $B^T B - \lambda^2 I$ can be decomposed as
 \begin{equation}
 B^T B - \lambda^2 I_n = L D_L L^T = U D_U U^T ,
 \end{equation}
-where $D_L=diag(\alpha_1, \cdots, \alpha_n)$, $D_U = diag(\beta_1, \cdots, \beta_n)$. Matrix $L$ is the same form as in Eq. (\ref{eq:l})
-%\[ L =  \left( \begin{array}{ccccc}
-%     1&      &       &        &  \\
-% l_{1}& 1    &       & 0      &  \\
-%      & l_{2}& \ddots&        &  \\
-%      & 0    & \ddots& \ddots &  \\
-%      &      &       & l_{n-1}& 1
-%\end{array} \right),
-\begin{equation}
+where $D_L=diag(\alpha_1, \cdots, \alpha_n)$, $D_U = diag(\beta_1, \cdots, \beta_n)$. $L$ and $U$ are 
+\[ L =  \left( \begin{array}{ccccc}
+     1&      &       &        &  \\
+ l_{1}& 1    &       & 0      &  \\
+      & l_{2}& \ddots&        &  \\
+      & 0    & \ddots& \ddots &  \\
+      &      &       & l_{n-1}& 1
+\end{array} \right), \;\;\;\;
  U =  \left( \begin{array}{ccccc}
   1 & u_{1}&       &       &  \\
     & 1    & u_{2} & 0     &  \\
     &      & 1     & \ddots&  \\
     & 0    &       & \ddots& u_{n-1} \\
     &      &       &       & 1
- \end{array} \right)
-\end{equation}
+ \end{array} \right) \]
 %$L$ is left bidiagonal matrix, $U$ is upper bidiagonal matrix.
 %The diagonal elements in $L$ and $U$ are 1s.
 %The subdiagonal elements are $l_k$ in $L$, and the superdiagonal elements are $u_k$ in $U$, separately.
@@ -186,7 +168,7 @@ k = \arg \min_{1\le i \le n} \gamma_{i} =
 \alpha_n & \text{if } i=n
 \end{cases}
 \end{equation}
-$D_k$ is diagonal matrix, $N_k$ is the twisted matrix with form 
+$D_k$ is diagonal matrix, $N_k$ is a twisted combination of the partial lower triangular $L$ and the partial upper triangular $U$
 \begin{equation}
 N_k =  \left( \begin{array}{cccccccc}
  1& & & & & & & \\
@@ -198,22 +180,22 @@ N_k =  \left( \begin{array}{cccccccc}
  & & 0& & & & \ddots& u_{n-1}\\
  & & & & & & & 1 \end{array} \right)
 \end{equation}
-\begin{equation}
-\eta_k = \begin{cases}
-0 & \text{if } i=1 \\
-\frac{l_{k-1}\alpha_{k-1}}{(\alpha_{k-1} - v_{k-1}^2 \beta_{k+1})} & \text{if } 2\le i\le n-1\\
-\l_{n-1} & \text{if } i=n
-\end{cases}
-\end{equation}
+%\begin{equation}
+%\eta_k = \begin{cases}
+%0 & \text{if } i=1 \\
+%\frac{l_{k-1}\alpha_{k-1}}{(\alpha_{k-1} - v_{k-1}^2 \beta_{k+1})} & \text{if } 2\le i\le n-1\\
+%\l_{n-1} & \text{if } i=n
+%\end{cases}
+%\end{equation}
 
 Thus, the corresponding singular vector of $\lambda$ can be obtained by solving the following matrix equations and then normalizing the solution:
 \begin{equation}
 \label{eq:unnorm}
-N_k^T Z_k = E_k ,
+N_k^T Z_k = I_k ,
 \end{equation}
- where each column in matrix $Z_k$ is the non-normalization solution of singular vector corresponding to $\lambda$, and $E_k$ is a unitary matrix.
+ where each column in matrix $Z_k$ is the non-normalization solution of singular vector corresponding to $\lambda$, and $I_k$ is a unitary matrix.
 
-One advantage of BT algorithm is that it can be applied to cases where singular values are clustered together.
+%One advantage of BT algorithm is that it can be applied to cases where singular values are clustered together.
 %\textcolor{red}{
 Suppose $m$ is the multiplicity of singular values of matrix $B$. 
 The algorithm selects the indices of the first $m$ minimum values of $\gamma$. %(May need some more clarification????)} 
