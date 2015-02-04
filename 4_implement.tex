@@ -50,7 +50,7 @@ That is, only half of the threads in a warp work in parallel at most. This is be
  there are fewer singular values than the number of warps, leading the cores under-utilized; and 
 (2) the warps are stalled due to memory accesses.
 
-On the other hand, we can divide the whole interval into larger subintervals, making the total number of subintervals small. 
+To address this issue, we divide the whole interval into larger subintervals, making the total number of subintervals small. 
 Then some of them may require much more processing capability
 because these subintervals may contain more singular values than others.
 In order to achieve a higher speedup, we could try to find the optimal number of subintervals, or the number of blocks, based on experimental results. 
