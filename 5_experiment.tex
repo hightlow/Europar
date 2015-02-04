@@ -68,11 +68,11 @@ DC implementation on CPU, 4 to 7.2 over the Liu's
 DC method on GPU, and 15 to 288 over the QR implementation in the work by Sheetal et al.
 Now let us take a look at each of the algorithms from the perspective of matrix size, Sheetal's QR implementation and Liu's DC implementation do not work at all when the dimensions of matrices are larger than 14K by 14K on their GPU with memory size of 16GB and 6GB, respectively. In contrast, in our implementation, the matrix size could reach 1 million by 1 million as shown in Table \ref{tab:hugeResultTesla}.
 
-\if 0
+\vspace{-0.1in}
 \subsection{Performance Comparison on Different GPUs}
-
 \subsubsection{Singular Value Computation}
 \begin{figure}[hbpt]
+\vspace{-0.3in}
 \centering
   \subfigure[Execution time]
   {
@@ -84,8 +84,10 @@ Now let us take a look at each of the algorithms from the perspective of matrix 
     \includegraphics[width=0.6\textwidth,height=1in]{svd_val_gpus_prof}
     \label{fig:svd_val_prof}
   }
+\vspace{-0.1in}
   \caption{Singular Value Kernel on Different GPUs}
   \label{fig:svdval}
+\vspace{-0.3in}
 \end{figure}
 
 Figure \ref{fig:svd_val} shows the execution time of calculating singular values with our ``equal number division'' design on different GPUs with single-precision floating point.
@@ -103,6 +105,7 @@ of GPUs due to its low memory requirements. That is, finding the singular
 values is rather CPU-bound than memory-bound. 
 As a result, the performance is determined largely by the number of CUDA cores and the ratio of thread activity on a GPU.
 
+\vspace{-0.2in}
 \subsubsection{Singular Vector Computation}
 Figure \ref{fig:svd_vec} shows the execution time of singular vector kernel on different GPUs. 
 It is easily seen that GeForce is about 8 times faster than
@@ -111,10 +114,10 @@ than Quadro.
 In addition, the device memory read/write transactions of GeForce are only 1/6 and 1/4 of those of Quadro, respectively.
 The performance on Tesla is slightly better than that on GeForce.
 Tesla has nearly the same device memory read transactions as GeForce does, while 3 times more write transactions than GeForce.
-Yet Tesla is still the winner of the three because of its extremely high
-bandwidth as listed in Table~\ref{tab:spec}.
+%Yet Tesla is still the winner of the three because of its extremely high bandwidth as listed in Table~\ref{tab:spec}.
 
 \begin{figure}[hbpt]
+\vspace{-0.3in}
 \centering
   \subfigure[Execution time]
   {
@@ -126,19 +129,19 @@ bandwidth as listed in Table~\ref{tab:spec}.
     \includegraphics[width=0.6\textwidth,height=1in]{svd_vec_gpus_prof}
     \label{fig:svd_vec_prof}
   }
+\vspace{-0.1in}
   \caption{Singular Vector Kernel on Different GPUs}
   \label{fig:svdvec}
+\vspace{-0.3in}
 \end{figure}
 
 Figure \ref{fig:svd_vec_prof} shows thread and memory bandwidth utilizations of singular vector design on different GPUs. 
 We can see from the figure that Quadro and GeForce reach a high memory utilization (80\%-99\%), while the memory utilization of Tesla is around 30\%. 
 We also observe that when the matrix size is larger than 2K, the thread utilization keeps stable on Quadro. 
 This is because the ratio of stall caused by memory is 70\%, implying that there are a lot of threads waiting on data transfer.
-\fi 
 
 \vspace{-0.1in}
 \subsection{Huge Size Result}
-\vspace{-0.1in}
 Table \ref{tab:hugeResultTesla} shows the performance of huge size matrix with double-precision floating-point numbers on a single Tesla and two Tesla GPUs on a server. For two Telsa GPUs, we compared static workload allocation (50\%/50\%) and dynamic allocation where each GPU is tracked constantly by the host CPU and assigned new workload as soon as it finishes the current kernel. 
 When matrix size reaches 1 million by 1 million our BT algorithm reaches the results in 54801 seconds with a single Telsa, and 35607 seconds with two Telsa GPUs. This is a 1.54X speedup.
 \begin{table}[h]
@@ -183,29 +186,22 @@ method has two phases: (1) divide the interval into subintervals and
 %For the number division design, we selects the minimal number of blocks that is able to allocated, since the execution time does not vary much between the minimal number of blocks and the optimal nubmer of blocks.
 \begin{figure}[hbpt]
 \vspace{-0.3in}
+\begin{minipage}[t]{0.5\linewidth}
 \centering
-  \subfigure[Comparison of Equal Length Division and Equal Number Division.]
-  {
-    \includegraphics[width=0.4\textwidth]{compare_value_kernel}
-    \label{fig:compare_value_kernel}
-  }
-  \subfigure[Memory Transactions on Singular Vector Design]
-  {
-    \includegraphics[width=0.4\textwidth]{transaction}
-    \label{fig:transaction}
-  }
-\vspace{-0.15in}
-  \caption{Profiling Analysis of GPU Kernels}
-%  \label{fig:ortho}
-\vspace{-0.3in}
+\includegraphics[width=2.2in]{compare_value_kernel}
+\vspace{-0.1in}
+\caption{Comparison of Equal Length \protect\\ Division and Equal Number Division.}
+\label{fig:compare_value_kernel}
+\end{minipage}%
+\begin{minipage}[t]{0.5\linewidth}
+\centering
+\includegraphics[width=2.2in]{transaction}
+\vspace{-0.1in}
+\caption{Memory Transactions on Singular Vector Design}
+\label{fig:transaction}
+\end{minipage}
+\vspace{-0.2in}
 \end{figure}
-%\begin{figure}[hbpt]
-%\centering
-%\includegraphics[width=0.4\textwidth]{compare_value_kernel}
-%\caption{Comparison of Equal Length Division and Equal Number Division. ``Interval Division in EL'' is negligible. }
-%\label{fig:compare_value_kernel}
-%\vspace{-0.10in}
-%\end{figure}
 Figure \ref{fig:compare_value_kernel} shows the detailed execution time breakdown for each phase of both methods (``Interval Division'' time for ``equal-length division'' is negligible) on Tesla K40c.
 From the figure, we can see that when the matrix size is less than 9K, the equal length division version runs a little faster than equal number division version.
 However, when the matrix size exceeds 9K, the execution time of the equal length division version increases dramatically, while the execution time of equal number division version still rises linearly.
@@ -217,6 +213,7 @@ large, the balanced number of singular values in a subinterval
 still yields much better performance.
 Thus, the equal number division version is obviously the winner when the matrix size becomes larger than 9K.
 
+\vspace{-0.2in}
 \subsubsection{Memory Access Optimization}
 We evaluate the memory optimization techniques on improving the performance
 of singular vector calculation. As depicted in Figure \ref{fig:transaction},
@@ -236,28 +233,7 @@ This is because column-major matrix have coalesced global memory accesses, which
 
 \vspace{-0.1in}
 \subsection{Accuracy Analysis}
-\vspace{-0.1in}
 \subsubsection{Tolerance in Bisection Algorithm}
-\begin{figure}[hbpt]
-\centering
-  \subfigure[Average Extra Execution Time When the accuracy increase Performance Comparision]
-  {
-    \includegraphics[width=0.3\textwidth]{tolerance}
-    \label{fig:tolerance}
-  }
-  \subfigure[Orthogonal Error]
-  {
-    \includegraphics[width=0.3\textwidth]{ortho_err}
-    \label{fig:ortho_err}
-  }
-  \subfigure[Image of Singular Vector Multiplication]
-  {
-    \includegraphics[width=0.3\textwidth]{orthogonal}
-    \label{fig:ortho_img}
-  }
-  \caption{Orthogonality of Singular Vector}
-  \label{fig:ortho}
-\end{figure}
 Since the bisection algorithm is an approximate algorithm to calculate the singular values, we should test the effect of different error tolerance.
 The error tolerance $err$ means that the error between the singular values of our algorithm and the actual singular values are less than $err$.
 It determines the accuracy of singular value and therefore the orthogonality of singular vectors.
@@ -266,12 +242,37 @@ However, it is important to know the incremental execution time to determine whi
 We test our algorithm on different error tolerance.
 The error tolerance is between $10^{-5}$ to $10^{-16}$ with tenfolder decreasing.
 
+\begin{figure}[hbpt]
+\vspace{-0.3in}
+\begin{minipage}[t]{0.33\linewidth}
+\centering
+\includegraphics[width=1.5in]{tolerance}
+\vspace{-0.1in}
+\caption{Average Extra Execution Time When the accuracy increase Performance Comparision}
+\label{fig:tolerance}
+\end{minipage}%
+\begin{minipage}[t]{0.33\linewidth}
+\centering
+\includegraphics[width=1.5in]{ortho_err}
+\vspace{-0.1in}
+\caption{Orthogonal Error of Singular Vector}
+\label{fig:ortho_err}
+\end{minipage}
+\begin{minipage}[t]{0.33\linewidth}
+\centering
+\includegraphics[width=1.5in]{orthogonal}
+\vspace{-0.1in}
+\caption{Image of Singular Vector Multiplication}
+\label{fig:ortho_img}
+\end{minipage}
+\vspace{-0.2in}
+\end{figure}
 Figure \ref{fig:tolerance} shows the average increased execution time when the accuracy of singular values goes up a higher level on different matrix size.
 In other word, it shows the average increased execution time when the error tolerance becomes smaller from $10^{-x}$ to $10^{-(x+1)}$.
 From the figure, we can see that when matrix size is smaller than 12000, the additional execution time is only less than $20 ms$ when the error tolerance rises a level.
 When the matrix size is larger than 15000, the additional execution time is a little higher about $40 ms$ per level.
 
 \subsubsection{Orthogonality of Singular Vector}
-In this section, I will show the orthogonality of singular vectors. 
-The multiplication of singular vectors is shown in \ref{fig:ortho_img}. The white diagonal are 1s, and the black are 0s. 
+Figure \ref{fig:ortho_img} shows the image of multiplication of sigular vectors when matrix size is $10000$.
+The white diagonal are 1s, and the black are 0s. 
 The error distribution of orthogonality is shown in \ref{fig:ortho_err}. Almost all the errors are close to 0.
