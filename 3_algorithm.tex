@@ -154,8 +154,6 @@ Given the $LDL^T$ and $UDU^T$ decomposition, the twisted factorization of the sh
 B^T B - \lambda^2 I = N_k D_k N_k^T ,
 \label{eq:twisted}
 \end{equation}
-where $k = \arg \min \gamma$, and $\gamma$ is defined as
-$\gamma = (\beta_1, \beta_2 - \alpha_2 * l_1, \cdots, \beta_i - \alpha_i * l_{i-1}, \cdots, \beta_i - \alpha_i * l_{i-1}, \alpha)$, 
 %in Eq. (\ref{eq:gamma}).
 %\begin{equation}
 %\label{eq:gamma}
@@ -166,7 +164,8 @@ $\gamma = (\beta_1, \beta_2 - \alpha_2 * l_1, \cdots, \beta_i - \alpha_i * l_{i-
 %\alpha_n & \text{if } i=n
 %\end{cases}
 %\end{equation}
-$D_k$ is diagonal matrix, $N_k$ is a twisted combination of the partial lower triangular $L$ and the partial upper triangular $U$.
+where $D_k$ is diagonal matrix, $N_k$ is a twisted combination of the partial lower triangular $L$ and the partial upper triangular $U$.
+The subscript $k = \arg \min \gamma$, and $\gamma = (\beta_1, \beta_2 - \alpha_2 * l_1, \cdots, \beta_i - \alpha_i * l_{i-1}, \cdots, \beta_{n-1} - \alpha_{n-1} * l_{n-2}, \alpha_n)$.
 %\begin{equation}
 %N_k =  \left( \begin{array}{cccccccc}
 % 1& & & & & & & \\
@@ -189,9 +188,9 @@ $D_k$ is diagonal matrix, $N_k$ is a twisted combination of the partial lower tr
 Thus, the corresponding singular vector of $\lambda$ can be obtained by solving the following matrix equations and then normalizing the solution:
 \begin{equation}
 \label{eq:unnorm}
-N_k^T Z_k = I_k ,
+N_k^T Z_k = e_k ,
 \end{equation}
- where each column in matrix $Z_k$ is the non-normalization solution of singular vector corresponding to $\lambda$, and $I_k$ is a unitary matrix.
+ where each column in matrix $z_k$ is the non-normalization solution of singular vector corresponding to $\lambda$, and $e_k$ is a $k$th unit vector.
 
 %One advantage of BT algorithm is that it can be applied to cases where singular values are clustered together.
 %\textcolor{red}{
