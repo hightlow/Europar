@@ -234,12 +234,12 @@ This is because column-major matrix have coalesced global memory accesses, which
 \vspace{-0.1in}
 \subsection{Accuracy Analysis}
 \subsubsection{Tolerance in Bisection Algorithm}
-Since the bisection algorithm is an approximate algorithm to calculate the singular values, we should test the effect of different error tolerance.
+Bisection algorithm is an approximate algorithm to calculate the singular values, we should evaluate the effect of different error tolerance.
 The error tolerance $err$ means that the error between the singular values of our algorithm and the actual singular values are less than $err$.
 It determines the accuracy of singular value and therefore the orthogonality of singular vectors.
-As we know, the more accuracy of singular values are, the more execution time should be spent.
+%As we know, the more accuracy of singular values are, the more execution time should be spent.
 However, it is important to know the incremental execution time to determine which error tolerance is suitable for different applications.
-We test our algorithm on different error tolerance.
+%We test our algorithm on different error tolerance.
 The error tolerance is between $10^{-5}$ to $10^{-16}$ with tenfolder decreasing.
 
 \begin{figure}[hbpt]
@@ -248,7 +248,7 @@ The error tolerance is between $10^{-5}$ to $10^{-16}$ with tenfolder decreasing
 \centering
 \includegraphics[width=1.5in]{tolerance}
 \vspace{-0.1in}
-\caption{Average Extra Execution Time When the accuracy increase Performance Comparision}
+\caption{Average Extra Time When Accuracy Increase}
 \label{fig:tolerance}
 \end{minipage}%
 \begin{minipage}[t]{0.33\linewidth}
@@ -267,10 +267,9 @@ The error tolerance is between $10^{-5}$ to $10^{-16}$ with tenfolder decreasing
 \end{minipage}
 \vspace{-0.2in}
 \end{figure}
-Figure \ref{fig:tolerance} shows the average increased execution time when the accuracy of singular values goes up a higher level on different matrix size.
-In other word, it shows the average increased execution time when the error tolerance becomes smaller from $10^{-x}$ to $10^{-(x+1)}$.
-From the figure, we can see that when matrix size is smaller than 12000, the additional execution time is only less than $20 ms$ when the error tolerance rises a level.
-When the matrix size is larger than 15000, the additional execution time is a little higher about $40 ms$ per level.
+Figure \ref{fig:tolerance} shows the average increased execution time when the accuracy of singular values goes up a higher level.
+In other word, it shows the average increased execution time when the error tolerance becomes smaller from $10^{-x}$ to $10^{-(x+1)}, (x=5,\cdots,15)$.
+The additional execution time is only less than $20 ms$ when matrix size is smaller than 12000, and $40 ms$ when matrix size is larger than 15000.
 
 \vspace{-0.1in}
 \subsubsection{Orthogonality of Singular Vector}
@@ -278,4 +277,4 @@ When the matrix size is larger than 15000, the additional execution time is a li
 Figure \ref{fig:ortho_img} shows the image of multiplication of sigular vectors when matrix size is 10000.
 The element of white diagonal are close to 1s, and the element in black areas are 0s.
 To obtain
-The error distribution of orthogonality is shown in \ref{fig:ortho_err}. Almost all the errors are close to 0.
+The error distribution of orthogonality is shown in \ref{fig:ortho_err}. We can see that the BT algorithm has good orthogonality.
