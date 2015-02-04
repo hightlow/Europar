@@ -1,27 +1,22 @@
 \vspace{-0.1in}
 \section{Bisection and Twisted Algorithm} \label{sec:algorithm}
 \vspace{-0.1in}
-For an arbitrary matrix $A\in \mathbb{R}^{m \times n} (m>n)$, we can decompose $A$ as follows:
-\begin{equation}
-\label{H-transform}
-A = Q B P^T ,
-\end{equation}
-where $B \in \mathbb{R}^{m \times n}$ is a bidiagonal matrix of the following form:
-\begin{equation}
-B = \left( \begin{array}{c}
-      B_1 \\
-      0  
-\end{array} \right) 
-\end{equation}
-Here $B_1 \in \mathbb{R}^{n \times n}$ is a bidiagonal matrix. Since 
-\[
-B^T B = \left( \begin{array}{cc }B_1^T & 0 \end{array} \right) \left( \begin{array}{c} B_1 \\ 0  \end{array} \right) = B_1^T B_1,
-\]
-we assume, without loss of generality, that $B$ is a $n \times n$ bidiagonal matrix in this paper.
- 
-Since Householder transform above has been fully optimized in paper \cite{LiuHouseholder}.
-In this paper, we focus only on the second step that reduces a bidiagonal matrix to a diagonal matrix, for which the  ``bisection and twisted'' algorithm is designed.
+For an arbitrary matrix $A\in \mathbb{R}^{m \times n} (m>n)$, 
+A SVD of an arbitrary matrix $A\in \mathbb{R}^{m \times n} (m>n)$ is the form $A = U \Sigma V^T$, where $U$ is a $m \times m$ orthogonal matrix, $V$ is a $n\times n$ orthogonal matrix, and $\Sigma$ is a $m\times n$ diagonal matrix.
+A typical SVD algorithm can be broken down into two steps \cite{65SIAM}.
+The first step is to reduce the initial matrix to bidiagonal by Householder transform.
+The second step is to diagonalize the bidiagonal matrix.
+Since Householder transform above has been optimized in paper \cite{LiuHouseholder}, we focus only on the second step that reduces a bidiagonal matrix to a diagonal matrix, for which the  ``bisection and twisted'' algorithm is designed.
 
+%\begin{equation}
+%A = Q B P^T
+%\label{eq:householder}
+%\end{equation}
+%where $B \in \mathbb{R}^{m \times n}$ is a bidiagonal matrix of the form $ B = ( B_1, 0 )^T$.
+%Here $B_1 \in \mathbb{R}^{n \times n}$ is a bidiagonal matrix. 
+%Since $B^T B = (B_1^T, 0)(B_1, 0)^T = B_1^T B_1$,
+%we assume, without loss of generality, that $B$ is a $n \times n$ bidiagonal matrix in this paper.
+ 
 The bisection and twisted algorithm is divided into two phases:
 (1) obtain the singular values of the bidiagonal matrix by bisection approach; and
 (2) obtain the corresponding left and right singular vectors of every singular value by twisted factorization.
@@ -36,21 +31,20 @@ The matrix $T = B^T B - \mu^2 I_n$ can be decomposed as
 \label{eq:T}
 T = B^T B - \mu^2 I_n = L D L^T ,
 \end{equation}
-where $\mu$ is a shift variable, $D$ and $L$ are as below.
-\vspace{-0.1in}
-\[ D =  \left( \begin{array}{cccc}
-d_{1} & 0     & \cdots & 0 \\
-0     & d_{2} & \cdots & 0 \\
-\vdots& \vdots& \ddots & \vdots \\
-    0 & 0     & \cdots & d_{n} \end{array} \right), \;\;\;\;
- L =  \left( \begin{array}{ccccc}
-     1&      &       &        &  \\
- l_{1}& 1    &       & 0      &  \\
-      & l_{2}& \ddots&        &  \\
-      & 0    & \ddots& \ddots &  \\
-      &      &       & l_{n-1}& 1
-\vspace{-0.1in}
-\end{array} \right) \label{eq:l} \]
+where $\mu$ is a shift variable, $D=diag(d_1,d_2,\cdots,d_n)$ and $L$ is lower bidiagonal matrix, whose diagonal elements are $1$s and one-order subdiagonal are $l_{i}, (i=1,\cdots,n-1)$.
+%are as below.
+%\[ D =  \left( \begin{array}{cccc}
+%d_{1} & 0     & \cdots & 0 \\
+%0     & d_{2} & \cdots & 0 \\
+%\vdots& \vdots& \ddots & \vdots \\
+%    0 & 0     & \cdots & d_{n} \end{array} \right), \;\;\;\;
+% L =  \left( \begin{array}{ccccc}
+%     1&      &       &        &  \\
+% l_{1}& 1    &       & 0      &  \\
+%      & l_{2}& \ddots&        &  \\
+%      & 0    & \ddots& \ddots &  \\
+%      &      &       & l_{n-1}& 1
+%\end{array} \right) \label{eq:l} \]
 By substituting $L$ and $D$ into Eq. (\ref{eq:T}), we can get the following equations
 \[ \left \{ \begin{aligned}
 b_{1,1}^2 - \mu^2 &= d_1\\
@@ -123,7 +117,7 @@ $NegCount(\mu)$ is also the number of the singular values of $B$ which are less 
 %On the other hand, too small value for $\tau$ may fail to reach the required accuracy.
 %Based on our tests, we can obtain the singular values with error tolerance less than $10^{-16}$.
 
-\vspace{-0.2in}
+\vspace{-0.1in}
 \subsection{Twisted Algorithm}
 \vspace{-0.1in}
 %The second phase of our algorithm, twisted algorithm, calculates the corresponding singular vectors.
@@ -134,21 +128,23 @@ Then the matrix $B^T B - \lambda^2 I$ can be decomposed as
 \begin{equation}
 B^T B - \lambda^2 I_n = L D_L L^T = U D_U U^T ,
 \end{equation}
-where $D_L=diag(\alpha_1, \cdots, \alpha_n)$, $D_U = diag(\beta_1, \cdots, \beta_n)$. $L$ and $U$ are 
-\[ L =  \left( \begin{array}{ccccc}
-     1&      &       &        &  \\
- l_{1}& 1    &       & 0      &  \\
-      & l_{2}& \ddots&        &  \\
-      & 0    & \ddots& \ddots &  \\
-      &      &       & l_{n-1}& 1
-\end{array} \right), \;\;\;\;
- U =  \left( \begin{array}{ccccc}
-  1 & u_{1}&       &       &  \\
-    & 1    & u_{2} & 0     &  \\
-    &      & 1     & \ddots&  \\
-    & 0    &       & \ddots& u_{n-1} \\
-    &      &       &       & 1
- \end{array} \right) \]
+where $D_L=diag(\alpha_1, \cdots, \alpha_n)$, $D_U = diag(\beta_1, \cdots, \beta_n)$, 
+$L$ is lower bidiagonal matrix, whose diagonal elements are $1$s and one-order subdiagonal are $l_{i}, (i=1,\cdots,n-1)$, 
+$U$ is upper bidiagonal matrix, whose diagonal elements are $1$s and one-order superdiagonal are $u_{i}, (i=1,\cdots,n-1)$. 
+%\[ L =  \left( \begin{array}{ccccc}
+%     1&      &       &        &  \\
+% l_{1}& 1    &       & 0      &  \\
+%      & l_{2}& \ddots&        &  \\
+%      & 0    & \ddots& \ddots &  \\
+%      &      &       & l_{n-1}& 1
+%\end{array} \right), \;\;\;\;
+% U =  \left( \begin{array}{ccccc}
+%  1 & u_{1}&       &       &  \\
+%    & 1    & u_{2} & 0     &  \\
+%    &      & 1     & \ddots&  \\
+%    & 0    &       & \ddots& u_{n-1} \\
+%    &      &       &       & 1
+% \end{array} \right) \]
 %$L$ is left bidiagonal matrix, $U$ is upper bidiagonal matrix.
 %The diagonal elements in $L$ and $U$ are 1s.
 %The subdiagonal elements are $l_k$ in $L$, and the superdiagonal elements are $u_k$ in $U$, separately.
@@ -158,28 +154,30 @@ Given the $LDL^T$ and $UDU^T$ decomposition, the twisted factorization of the sh
 B^T B - \lambda^2 I = N_k D_k N_k^T ,
 \label{eq:twisted}
 \end{equation}
-where $k$ is the index of the minimum $\gamma$ defined in Eq. (\ref{eq:gamma}).
-\begin{equation}
-\label{eq:gamma}
-k = \arg \min_{1\le i \le n} \gamma_{i} =
-\begin{cases}
-\beta_1 & \text{if } i=1 \\
-\beta_i - \alpha_i * l_{i-1} & \text{if } 2\le i\le n-1\\
-\alpha_n & \text{if } i=n
-\end{cases}
-\end{equation}
-$D_k$ is diagonal matrix, $N_k$ is a twisted combination of the partial lower triangular $L$ and the partial upper triangular $U$
-\begin{equation}
-N_k =  \left( \begin{array}{cccccccc}
- 1& & & & & & & \\
- l_{1}& \ddots& & & & 0& & \\
- & \ddots& 1& & & & &  \\
- & & l_{k-2}& 1 & & & & \\
- & & & \eta_k& 1& u_k& & \\
- & & & & & 1& \ddots& \\
- & & 0& & & & \ddots& u_{n-1}\\
- & & & & & & & 1 \end{array} \right)
-\end{equation}
+where $k = \arg \min \gamma$, and $\gamma$ is defined as
+$\gamma = (\beta_1, \beta_2 - \alpha_2 * l_1, \cdots, \beta_i - \alpha_i * l_{i-1}, \cdots, \beta_i - \alpha_i * l_{i-1}, \alpha)$, 
+%in Eq. (\ref{eq:gamma}).
+%\begin{equation}
+%\label{eq:gamma}
+%k = \arg \min_{1\le i \le n} \gamma_{i} =
+%\begin{cases}
+%\beta_1 & \text{if } i=1 \\
+%\beta_i - \alpha_i * l_{i-1} & \text{if } 2\le i\le n-1\\
+%\alpha_n & \text{if } i=n
+%\end{cases}
+%\end{equation}
+$D_k$ is diagonal matrix, $N_k$ is a twisted combination of the partial lower triangular $L$ and the partial upper triangular $U$.
+%\begin{equation}
+%N_k =  \left( \begin{array}{cccccccc}
+% 1& & & & & & & \\
+% l_{1}& \ddots& & & & 0& & \\
+% & \ddots& 1& & & & &  \\
+% & & l_{k-2}& 1 & & & & \\
+% & & & \eta_k& 1& u_k& & \\
+% & & & & & 1& \ddots& \\
+% & & 0& & & & \ddots& u_{n-1}\\
+% & & & & & & & 1 \end{array} \right)
+%\end{equation}
 %\begin{equation}
 %\eta_k = \begin{cases}
 %0 & \text{if } i=1 \\

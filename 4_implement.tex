@@ -1,8 +1,7 @@
 \vspace{-0.1in}
 \section{Implementation and Optimization on GPU} \label{sec:implementation}
 \vspace{-0.1in}
-\subsection{Singular Value Kernels}
-\label{sec_svalue}
+\subsection{Singular Value Kernels} \label{sec_svalue}
 \vspace{-0.1in}
 To obtain the singular values, we divide the whole interval calculated with Gershgorin circle theorem into several subintervals, which can be computed in parallel.
 Each subinterval can then be assigned to one GPU block for calculation.
@@ -24,7 +23,7 @@ strategies as described below.
   \includegraphics[width=0.45\textwidth]{number_interval}
   \label{fig:number_interval}
   }
-  \vspace{-0.1in}
+\vspace{-0.1in}
   \caption{Division Strategies for Partitioning Interval  $[a_0, a_n)$.}
 \vspace{-0.3in}
 \end{figure}
@@ -44,9 +43,8 @@ The maximum number of threads per block determines the minimum number
 of subintervals that are assigned to corresponding GPU blocks.
 In addition, the number of threads in a GPU warp assigned to a subinterval affects the GPU utilization level.
 
-We have conducted experiments to understand the trade-offs %of 
-between subinterval length
-and the GPU execution efficiency. Smaller subintervals will lead to a larger number of subintervals, which cause the GPU warp execution to be less efficient. 
+We have conducted experiments to understand the trade-offs between subinterval length and the GPU execution efficiency. 
+Smaller subintervals will lead to a larger number of subintervals, which cause the GPU warp execution to be less efficient. 
 For example, our experiments show that if $512$ subintervals are used, the efficiency of GPU warp execution ranges from only 12.38\% to 52.15\% when the matrix size increases from $1,000$ to $17,000$.
 That is, only half of the threads in a warp work in parallel at most. This is because  (1)
  there are fewer singular values than the number of warps, leading the cores under-utilized; and 
@@ -76,7 +74,7 @@ The significant advantage for the equal number division strategy is that, more s
 Our experiment results show that equal number division outperforms length division strategy.
 The warp execution efficiency in equal number division version can reach 92.97\%-96.13\%.
 
-\vspace{-0.2in}
+\vspace{-0.1in}
 \subsection{Singular Vector Kernel} \label{sec_svector}
 \vspace{-0.1in}
 Since the singular vectors are two $n\times n$ dense matrices, as the matrix size increases, significant challenges are increasing on memory storage because the size of the fast shared memory is limited in GPU architectures.
@@ -120,7 +118,7 @@ of such optimizations in Section \ref{sec:results}.
 %As a result, the global load/store transactions are reduced by 50\%/25\% compared to ``read/write optimization'', respectively. 
 %This is because column-major matrix have coalesced global memory accesses, which saves hundreds of transactions per thread. The speedup rises up to 4.5X compared to the baseline.
 
-\vspace{-0.2in}
+\vspace{-0.1in}
 \subsection{Solution to Huge Matrices} \label{sec_huge}
 \vspace{-0.1in}
 In our design, the maximum number of singular values can be processed on a singular GPU is $m_b = subinterval\_size \times thread\_block\_size$,
@@ -143,7 +141,7 @@ where $n$ is matrix size.
 Thus, there should be $\lfloor(n/l_t)\rfloor+1$ partitions with
 $\lfloor(n/l_t)\rfloor$ singular vectors in each partition.
 
-\vspace{-0.2in}
+\vspace{-0.1in}
 \subsection{Multiple GPUs on a server}\label{sec_mgpu}
 \vspace{-0.1in}
 We implement the multiple-GPU version with Pthread libraries on one server
