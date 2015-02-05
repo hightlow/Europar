@@ -3,7 +3,8 @@
 \vspace{-0.1in}
 \subsection{Singular Value Kernels} \label{sec_svalue}
 \vspace{-0.1in}
-To obtain the singular values, we divide the whole interval calculated with Gershgorin circle theorem into several subintervals, which can be computed in parallel.
+To obtain the singular values, we divide the whole interval {\color{red}containing all the singular values} into several subintervals, which can be computed in parallel. 
+The whole interval can be calculated with Gershgorin circle theorem \cite{gershgorin}.
 Each subinterval can then be assigned to one GPU block for calculation.
 Because there is a limit on the maximum number of threads for each GPU block,
 the number of singular values in a subinterval must not exceed that maximum number. Otherwise, the computation will have to be wrapped into two or more sequential phases to complete.
@@ -49,10 +50,7 @@ For example, our experiments show that if $512$ subintervals are used, the effic
 That is, only half of the threads in a warp work in parallel at most. This is because  (1)
  there are fewer singular values than the number of warps, leading the cores under-utilized; and 
 (2) the warps are stalled due to memory accesses.
-
-To address this issue, we divide the whole interval into larger subintervals, making the total number of subintervals small. 
-Then some of them may require much more processing capability
-because these subintervals may contain more singular values than others.
+{\color{red}When the subinterval becomes larger, some block may get more singular values than its capability.}
 In order to achieve a higher speedup, we could try to find the optimal number of subintervals, or the number of blocks, based on experimental results. 
 However, because of the uneven number of singular values within subintervals, the speedup for equal length division remains very limited, which motivates us to search for a better partition method.
 
@@ -60,7 +58,7 @@ Our novel strategy is to divide the whole interval by the number of singular val
 Specifically, we divide the interval $[b_0,b_n)$ into $n$ subintervals, each of which has the same number of singular values. 
 However, the length of a subinterval is not necessarily equal to others.
 The mathematical representation can be written as $NegCount(b_{k+1})-NegCount(b_{k})=NegCount(b_{k})-NegCount(b_{k-1})$ but $b_{k+1}-b_k \ne b_{k}-b_{k-1}$ does not hold anymore.
-This equal number division significantly improves the load balancing on GPU cores, helping achieve a better speedup.
+This equal number division significantly improves the load balancing on GPU cores, helping achieve a better speedup, as we show the performace evaluation in Figure \ref{fig:compare_value_kernel}.
 
 %The convergence of bisection algorithm on a splitting point makes it possible to compute the number of singular values before actually computing
 %the values themselves. The splitting point can be easily found by applying several $NegCount$ functions on the interval. Specifically, we design a method to find the boundary points of such subintervals, as shown in Algorithm \ref{alg:numsub}.
@@ -70,8 +68,8 @@ This equal number division significantly improves the load balancing on GPU core
 %Line 6-16 make use of loop to find the split point of number division by bisection algorithm.
 %\input{algorithm_numsub}
 
-The significant advantage for the equal number division strategy is that, more singular values can be calculated with the equal number division strategy than equal length division strategy, especially when the distribution of singular values is not uniform.
-Our experiment results show that equal number division outperforms length division strategy.
+The significant advantage for the equal number division strategy is that, more singular values can be calculated with the equal number division strategy than equal length division strategy.
+Our experiment results show that equal number division outperforms length division strategy:
 The warp execution efficiency in equal number division version can reach 92.97\%-96.13\%.
 
 \vspace{-0.1in}
@@ -119,7 +117,7 @@ of such optimizations in Section \ref{sec:results}.
 %This is because column-major matrix have coalesced global memory accesses, which saves hundreds of transactions per thread. The speedup rises up to 4.5X compared to the baseline.
 
 \vspace{-0.1in}
-\subsection{Solution to Huge Matrices} \label{sec_huge}
+\subsection{Solution to Big Matrices} \label{sec_huge}
 \vspace{-0.1in}
 In our design, the maximum number of singular values can be processed on a singular GPU is $m_b = subinterval\_size \times thread\_block\_size$,
 while the maximum number of singular vectors are determined by $m_t = \sqrt{U / (5 * S)}$,
