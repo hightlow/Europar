@@ -20,18 +20,18 @@ But the major drawback of DC is the relatively low accuracy of the singular valu
 In summary, the prior works on SVD computations are either time-consuming or inaccurate.
 
 In addition, all algorithms discussed above have three common disadvantages:
-(1) heavy data dependence makes SVD algorithm not suitable for parallelization and extension for other architectures;
+(1) heavy data dependence makes these SVD algorithms not suitable for parallelization and extension for other architectures;
 (2) large memory space required for temporary variables dramatically limits the capability for computing singular values for very large matrices, and
-(3) these algorithms are unable to calculate the subsets directly, while many SVD applications, such as principal component analysis (PCA), need only a small subset of the singular values and vectors.
+(3) many application, such as principal component analysis (PCA), only require a small subset of the singular values and vectors, however, these algorithms are unable to calculate the subsets {\color{red}without the whole decomposition}.
 
 In this paper, we present a new SVD approach called ``Bisection and Twisted'' (BT) algorithm and implement it on GPU. 
-Compared to other algorithms, BT approach only requires $O(n^2)$ to complete the whole SVD\cite{05UCB,09NLAAtwisted}.
-Most importantly, there are three salient features that make BT algorithm attractive for large matrices. 
+Compared to other algorithms, BT approach only requires $O(n^2)$ to complete SVD\cite{05UCB,09NLAAtwisted}.
+Most importantly, there are three salient features that make BT algorithm attractive for very large matrices. 
 First, the data dependency is weak in the BT algorithm, which make it an excellent candidate for parallel computing. 
 Second, the algorithm can obtain a subset of $k$ singular values and its corresponding vectors in $O(kn)$ time. 
 This is particularly useful for applications that do not require a complete SVD.
 Third, the algorithm needs only $O(kn)$ memory space to store temporary variables, which is important for extending to large scale matrices in big data applications on memory constrained platforms.
-We design a multi-GPU version that can scale well with the matrix size. To the best of our knowledge, we are the first to achieve bidiagonal SVD on a 1 million by 1 million matrix using just two GPUs.
+We design a multi-GPU version of BT algorithm that can scale well with the matrix size. To the best of our knowledge, we are the first to achieve bidiagonal SVD on a 1 million by 1 million matrix using just two GPUs.
 We also perform in-depth analysis on the GPU kernels for singular vector calculation, and present multiple optimization methods to further improve the SVD performance on GPUs.
 
 The rest of the paper is organized as follows.
@@ -39,5 +39,5 @@ The Bisection and Twisted algorithm is given in Section \ref{sec:algorithm}.
 Section \ref{sec:implementation} describes the implementation of the BT algorithm on GPUs, as well as the GPU specific optimizations.
 Section \ref{sec:results} presents the experimental results and profiling analysis of GPU kernels.
 Section \ref{sec:related} discusses the related work.
-Conclusion and future work are in Section \ref{sec:conclusion}.
+The conclusion and future work are in Section \ref{sec:conclusion}.
 
