@@ -6,7 +6,8 @@ A SVD of an arbitrary matrix $A\in \mathbb{R}^{m \times n} (m>n)$ is the form $A
 A typical SVD algorithm can be broken down into two steps \cite{65SIAM}.
 The first step is to reduce the initial matrix to bidiagonal by Householder transform.
 The second step is to diagonalize the bidiagonal matrix.
-Since Householder transform above has been optimized in paper \cite{LiuHouseholder}, we focus only on the second step that reduces a bidiagonal matrix to a diagonal matrix, for which the  ``bisection and twisted'' algorithm is designed.
+{\color{red}Householder transform above has been optimized in paper \cite{LiuHouseholder} for small matrices. For very large matrices, it is still an open problem.} 
+In this paper, we focus only on the second step that reduces a bidiagonal matrix to a diagonal matrix, for which the  ``bisection and twisted'' algorithm is designed.
 
 %\begin{equation}
 %A = Q B P^T
@@ -20,10 +21,10 @@ Since Householder transform above has been optimized in paper \cite{LiuHousehold
 The bisection and twisted algorithm is divided into two phases:
 (1) obtain the singular values of the bidiagonal matrix by bisection approach; and
 (2) obtain the corresponding left and right singular vectors of every singular value by twisted factorization.
-Next we illustrate these two phases in the following subsections.
+Next we describe these two phases in the following subsections.
 
 \vspace{-0.1in}
-\subsection{Bisection Algorithm}
+\subsection{Bisection Algorithm}\label{subsec:bisection}
 \vspace{-0.1in}
 Suppose $B$ is an upper bidiagonal $n \times n$ matrix with elements $b_{i,j}$ reduced by Householder transform \cite{10householder}.
 The matrix $T = B^T B - \mu^2 I_n$ can be decomposed as
@@ -31,7 +32,7 @@ The matrix $T = B^T B - \mu^2 I_n$ can be decomposed as
 \label{eq:T}
 T = B^T B - \mu^2 I_n = L D L^T ,
 \end{equation}
-where $\mu$ is a shift variable, $D=diag(d_1,d_2,\cdots,d_n)$ and $L$ is lower bidiagonal matrix, whose diagonal elements are $1$s and one-order subdiagonal are $l_{i}, (i=1,\cdots,n-1)$.
+where $\mu$ is a shift variable, $D=diag(d_1,d_2,\cdots,d_n)$ and $L$ is lower bidiagonal matrix, whose diagonal elements are $1$s and one-order subdiagonal elements are $l_{i}, (i=1,\cdots,n-1)$.
 %are as below.
 %\[ D =  \left( \begin{array}{cccc}
 %d_{1} & 0     & \cdots & 0 \\
@@ -66,12 +67,13 @@ d_k = b_{k,k}^2 + t_{k}
 Matrices $D$ and $T$ are two congruent symmetric matrices.
 According to the Sylvester's law of inertia, both matrices $D$ and $T$ have the same numbers of positive, negative, and zero eigenvalues.
 Thus, the number of negative elements in the diagonal of matrix $D$ is the number of singular values of matrix $T$.
-We define a function denoted by $NegCount(\mu)$ to count the number of elements  in the diagonal of matrix $D$ that are negative. %described in Algorithm \ref{alg:negcount}.
+We define a function denoted by $NegCount(\mu)$ to count the number of negative elements in the diagonal of matrix $D$. %described in Algorithm \ref{alg:negcount}.
 %Algorithm \ref{alg:negcount} describes how $NegCount$ function works.
 %Lines 3-7 calculate the negative number of singular values that are less than $\mu$.
 %Since matrices $B$ and $B^T$ have the same singular values,
 $NegCount(\mu)$ is also the number of the singular values of $B$ which are less than $\mu$.
-%If the floating point arithmetic is monotonic, then $NegCount(x)$ is a monotonically non-decreasing function of $x$ \cite{95ETNAbisecion}.
+$NegCount(x)$ is a monotonically non-decreasing function of $x$ \cite{95ETNAbisecion}.
+%If floating point arithmetic is monotonic, then $NegCount(x)$ is a monotonically non-decreasing function of $x$ \cite{95ETNAbisecion}.
 % \input{algorithm_negcount}
 
 %Algorithm \ref{alg:negcount} is used to count the number of singular values of matrix $B$ those are less than $\mu$.
@@ -129,7 +131,7 @@ Then the matrix $B^T B - \lambda^2 I$ can be decomposed as
 B^T B - \lambda^2 I_n = L D_L L^T = U D_U U^T ,
 \end{equation}
 where $D_L=diag(\alpha_1, \cdots, \alpha_n)$, $D_U = diag(\beta_1, \cdots, \beta_n)$, 
-$L$ is lower bidiagonal matrix, whose diagonal elements are $1$s and one-order subdiagonal are $l_{i}, (i=1,\cdots,n-1)$, 
+{\color{red}$L$ is lower bidiagonal matrix, whose diagonal elements are $1$s and one-order subdiagonal are $l_{i}, (i=1,\cdots,n-1)$, $L$ is lower bidiagonal matrix with the same format above in Section \ref{subsec:bisection}}
 $U$ is upper bidiagonal matrix, whose diagonal elements are $1$s and one-order superdiagonal are $u_{i}, (i=1,\cdots,n-1)$. 
 %\[ L =  \left( \begin{array}{ccccc}
 %     1&      &       &        &  \\
