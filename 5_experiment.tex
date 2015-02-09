@@ -117,7 +117,7 @@ Tesla has nearly the same device memory read transactions as GeForce does, while
 %Yet Tesla is still the winner of the three because of its extremely high bandwidth as listed in Table~\ref{tab:spec}.
 
 \begin{figure}[hbpt]
-\vspace{-0.3in}
+\vspace{-0.2in}
 \centering
   \subfigure[Execution time]
   {
@@ -141,8 +141,8 @@ We also observe that when the matrix size is larger than 2K, the thread utilizat
 This is because the ratio of stall caused by memory is 70\%, implying that there are a lot of threads waiting on data transfer.
 
 \vspace{-0.1in}
-\subsection{Huge Size Result}
-Table \ref{tab:hugeResultTesla} shows the performance of huge size matrix with double-precision floating-point numbers on a single Tesla and two Tesla GPUs on a server. For two Telsa GPUs, we compared static workload allocation (50\%/50\%) and dynamic allocation where each GPU is tracked constantly by the host CPU and assigned new workload as soon as it finishes the current kernel. 
+\subsection{Experiments with Big Matrices}
+Table \ref{tab:hugeResultTesla} shows the performance of very large matrix with double-precision floating-point numbers on a single Tesla and two Tesla GPUs on a server. For two Telsa GPUs, we compared static workload allocation (50\%/50\%) and dynamic allocation where each GPU is tracked constantly by the host CPU and assigned new workload as soon as it finishes the current kernel. 
 When matrix size reaches 1 million by 1 million our BT algorithm reaches the results in 54801 seconds with a single Telsa, and 35607 seconds with two Telsa GPUs. This is a 1.54X speedup.
 \begin{table}[h]
 \vspace{-0.3in}
@@ -277,4 +277,4 @@ In either case, the increased time is negligible compared to the overall exeucti
 \vspace{-0.1in}
 Figure \ref{fig:ortho_img} shows the image of multiplication of singular vectors when matrix size is 10000.
 The element of white diagonal are close to 1s, and the element in black areas are 0s.
-The error distribution of orthogonality is shown in \ref{fig:ortho_err}. We can see that the BT algorithm has good orthogonality.
+The error distribution of orthogonality is shown in Figure \ref{fig:ortho_err}. We can see that the BT algorithm has good orthogonality.

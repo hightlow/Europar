@@ -5,7 +5,7 @@
 \vspace{-0.1in}
 To obtain the singular values, we divide the whole interval containing all the singular values into several subintervals, which can be computed in parallel. 
 The whole interval can be calculated with Gershgorin circle theorem \cite{gershgorin}.
-Each subinterval can then be assigned to one GPU block {\color{red}(which consists of threads and is executed by a multiprocessing unit concurrently)} for calculation.
+Each subinterval can then be assigned to one GPU block (a group of threads executed concurrently on a CUDA multiprocessor unit) for calculation.
 Because there is a limit on the maximum number of threads for each GPU block,
 the number of singular values in a subinterval must not exceed that maximum number. Otherwise, the computation will have to be wrapped into two or more sequential phases to complete.
 Therefore how to divide the interval is critical for the performance of
@@ -50,7 +50,7 @@ For example, our experiments show that if $512$ subintervals are used, the effic
 That is, only half of the threads in a warp work in parallel at most. This is because  (1)
  there are fewer singular values than the number of warps, leading the cores under-utilized; and 
 (2) the warps are stalled due to memory accesses.
-{\color{red}When the subinterval becomes larger, some block may get more singular values than its capability.}
+When the subinterval becomes larger, some block may get more singular values to calculate than its capability.
 In order to achieve a higher speedup, we could try to find the optimal number of subintervals, or the number of blocks, based on experimental results. 
 However, because of the uneven number of singular values within subintervals, the speedup for equal length division remains very limited, which motivates us to search for a better partition method.
 
