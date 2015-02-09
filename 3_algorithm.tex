@@ -23,14 +23,16 @@ The bisection and twisted algorithm is divided into two phases:
 (2) obtain the corresponding left and right singular vectors of every singular value by twisted factorization.
 Next we describe these two phases in the following subsections.
 
-\vspace{-0.1in}
+\vspace{-0.15in}
 \subsection{Bisection Algorithm}\label{subsec:bisection}
 \vspace{-0.1in}
 Suppose $B$ is an upper bidiagonal $n \times n$ matrix with elements $b_{i,j}$ reduced by Householder transform \cite{10householder}.
 The matrix $T = B^T B - \mu^2 I_n$ can be decomposed as
 \begin{equation}
 \label{eq:T}
+\vspace{-0.05in}
 T = B^T B - \mu^2 I_n = L D L^T ,
+\vspace{-0.05in}
 \end{equation}
 where $\mu$ is a shift variable, $D=diag(d_1,d_2,\cdots,d_n)$ and $L$ is lower bidiagonal matrix, whose diagonal elements are $1$s and one-order subdiagonal elements are $l_{i}, (i=1,\cdots,n-1)$.
 %are as below.
@@ -47,14 +49,18 @@ where $\mu$ is a shift variable, $D=diag(d_1,d_2,\cdots,d_n)$ and $L$ is lower b
 %      &      &       & l_{n-1}& 1
 %\end{array} \right) \label{eq:l} \]
 By substituting $L$ and $D$ into Eq. (\ref{eq:T}), we can get the following equations
-\[ \left \{ \begin{aligned}
+\[ \vspace{-0.05in}
+\left \{ \begin{aligned}
 b_{1,1}^2 - \mu^2 &= d_1\\
 b_{k-1,k-1} b_{k-1,k} &= d_{k-1} l_{k-1}\\
 b_{k-1,k}^2 + b_{k,k}^2 - \mu^2 &= l_{k-1}^2 d_{k-1} + d_k
-\end{aligned} \right . \label{eq:ldl} \]
+\vspace{-0.05in}
+\end{aligned} \right . \label{eq:ldl} 
+\vspace{-0.05in} \]
 where $k = 2,3,\cdots,n$.
 Next, we define an auxiliary values $t_{k} = t_{k-1} * (b_{k-1,k}^2 / d_{k-1}) - \mu^2$, and then all the equations in Eq. (\ref{eq:ldl}) reduce to
 \begin{equation}
+\vspace{-0.05in}
 \left \{
 \begin{aligned}
 d_1 = b_{1,1}^2 - \mu^2 \\
@@ -62,6 +68,7 @@ d_k = b_{k,k}^2 + t_{k}
 \end{aligned}
 \right .
 \label{eq:negcount}
+\vspace{-0.05in}
 \end{equation}
 
 Matrices $D$ and $T$ are two congruent symmetric matrices.
@@ -119,7 +126,7 @@ $NegCount(x)$ is a monotonically non-decreasing function of $x$ \cite{95ETNAbise
 %On the other hand, too small value for $\tau$ may fail to reach the required accuracy.
 %Based on our tests, we can obtain the singular values with error tolerance less than $10^{-16}$.
 
-\vspace{-0.1in}
+\vspace{-0.15in}
 \subsection{Twisted Algorithm}
 \vspace{-0.1in}
 %The second phase of our algorithm, twisted algorithm, calculates the corresponding singular vectors.
@@ -128,7 +135,9 @@ $NegCount(x)$ is a monotonically non-decreasing function of $x$ \cite{95ETNAbise
 Suppose $\lambda$ is a singular value of bidiagonal matrix $B \in R^{n \times n}$.
 Then the matrix $B^T B - \lambda^2 I$ can be decomposed as
 \begin{equation}
+\vspace{-0.05in}
 B^T B - \lambda^2 I_n = L D_L L^T = U D_U U^T ,
+\vspace{-0.05in}
 \end{equation}
 where $D_L=diag(\alpha_1, \cdots, \alpha_n)$, $D_U = diag(\beta_1, \cdots, \beta_n)$, 
 $L$ is lower bidiagonal matrix, whose diagonal elements are $1$s and one-order subdiagonal are $l_{i}, (i=1,\cdots,n-1)$ ($L$ share the same format as in Eq. (\ref{eq:T})).
@@ -153,7 +162,9 @@ $U$ is upper bidiagonal matrix, whose diagonal elements are $1$s and one-order s
 
 Given the $LDL^T$ and $UDU^T$ decomposition, the twisted factorization of the shifted matrix is shown as
 \begin{equation}
+\vspace{-0.05in}
 B^T B - \lambda^2 I = N_k D_k N_k^T ,
+\vspace{-0.05in}
 \label{eq:twisted}
 \end{equation}
 %in Eq. (\ref{eq:gamma}).
@@ -190,7 +201,9 @@ The subscript $k = \arg \min \gamma$, and $\gamma = (\beta_1, \beta_2 - \alpha_2
 Thus, the corresponding singular vector of $\lambda$ can be obtained by solving the following matrix equations and then normalizing the solution:
 \begin{equation}
 \label{eq:unnorm}
+\vspace{-0.05in}
 N_k^T Z_k = e_k ,
+\vspace{-0.05in}
 \end{equation}
  where each column in matrix $z_k$ is the non-normalization solution of singular vector corresponding to $\lambda$, and $e_k$ is a $k$th unit vector.
 

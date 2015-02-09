@@ -1,4 +1,4 @@
-\vspace{-0.1in}
+\vspace{-0.15in}
 \section{Experimental Results} \label{sec:results}
 \vspace{-0.1in}
 In this section, we evaluate the performance of our bisection and twisted algorithm and compare it with prior SVD implementations on CPUs and GPUs.
@@ -188,14 +188,14 @@ method has two phases: (1) divide the interval into subintervals and
 \vspace{-0.3in}
 \begin{minipage}[t]{0.5\linewidth}
 \centering
-\includegraphics[width=2.2in]{compare_value_kernel}
+\includegraphics[width=2.2in,height=1.5in]{compare_value_kernel}
 \vspace{-0.1in}
 \caption{Comparison of Equal Length \protect\\ Division and Equal Number Division.}
 \label{fig:compare_value_kernel}
 \end{minipage}%
 \begin{minipage}[t]{0.5\linewidth}
 \centering
-\includegraphics[width=2.2in]{transaction}
+\includegraphics[width=2.2in,height=1.5in]{transaction}
 \vspace{-0.1in}
 \caption{Memory Transactions on Singular Vector Design}
 \label{fig:transaction}
@@ -246,21 +246,21 @@ The error tolerance is between $10^{-5}$ to $10^{-16}$ with tenfolder decreasing
 \vspace{-0.3in}
 \begin{minipage}[t]{0.33\linewidth}
 \centering
-\includegraphics[width=1.5in]{tolerance}
+\includegraphics[width=1.5in,height=1in]{tolerance}
 \vspace{-0.1in}
 \caption{Average Extra Time When Accuracy Increase}
 \label{fig:tolerance}
 \end{minipage}%
 \begin{minipage}[t]{0.33\linewidth}
 \centering
-\includegraphics[width=1.5in]{ortho_err}
+\includegraphics[width=1.5in,height=1in]{ortho_err}
 \vspace{-0.1in}
 \caption{Orthogonal Error of Singular Vector}
 \label{fig:ortho_err}
 \end{minipage}
 \begin{minipage}[t]{0.33\linewidth}
 \centering
-\includegraphics[width=1.5in]{orthogonal}
+\includegraphics[width=1.5in,height=1in]{orthogonal}
 \vspace{-0.1in}
 \caption{Image of Singular Vector Multiplication}
 \label{fig:ortho_img}
@@ -270,11 +270,11 @@ The error tolerance is between $10^{-5}$ to $10^{-16}$ with tenfolder decreasing
 Figure \ref{fig:tolerance} shows the average increased execution time when the accuracy of singular values goes up a higher level.
 In other word, it shows the average increased execution time when the error tolerance becomes smaller from $10^{-x}$ to $10^{-(x+1)}, (x=5,\cdots,15)$.
 The additional execution time is less than $20 ms$ when matrix size is smaller than 12000, and $40 ms$ when matrix size is larger than 15000.
-{\bf FIXME: In either case, the increased time is negligible compared to the overall exeuction time.}
+In either case, the increased time is negligible compared to the overall exeuction time.
 
 \vspace{-0.1in}
 \subsubsection{Orthogonality of Singular Vector}
 \vspace{-0.1in}
-Figure \ref{fig:ortho_img} shows the image of multiplication of sigular vectors when matrix size is 10000.
+Figure \ref{fig:ortho_img} shows the image of multiplication of singular vectors when matrix size is 10000.
 The element of white diagonal are close to 1s, and the element in black areas are 0s.
 The error distribution of orthogonality is shown in \ref{fig:ortho_err}. We can see that the BT algorithm has good orthogonality.

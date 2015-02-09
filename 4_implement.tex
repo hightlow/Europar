@@ -5,7 +5,7 @@
 \vspace{-0.1in}
 To obtain the singular values, we divide the whole interval containing all the singular values into several subintervals, which can be computed in parallel. 
 The whole interval can be calculated with Gershgorin circle theorem \cite{gershgorin}.
-Each subinterval can then be assigned to one GPU block ({\bf FIXME: add a brief description of GPU block}) for calculation.
+Each subinterval can then be assigned to one GPU block {\color{red}(which consists of threads and is executed by a multiprocessing unit concurrently)} for calculation.
 Because there is a limit on the maximum number of threads for each GPU block,
 the number of singular values in a subinterval must not exceed that maximum number. Otherwise, the computation will have to be wrapped into two or more sequential phases to complete.
 Therefore how to divide the interval is critical for the performance of
@@ -72,7 +72,7 @@ The significant advantage for the equal number division strategy is that, more s
 Our experiment results show that equal number division outperforms length division strategy:
 The warp execution efficiency in equal number division version can reach 92.97\%-96.13\%.
 
-\vspace{-0.1in}
+\vspace{-0.15in}
 \subsection{Singular Vector Kernel} \label{sec_svector}
 \vspace{-0.1in}
 Since the singular vectors are two $n\times n$ dense matrices, as the matrix size increases, there is increasing pressure on memory storage because the size of the fast shared memory is limited in GPU architectures.
@@ -116,7 +116,7 @@ of such optimizations in Section \ref{sec:results}.
 %As a result, the global load/store transactions are reduced by 50\%/25\% compared to ``read/write optimization'', respectively. 
 %This is because column-major matrix have coalesced global memory accesses, which saves hundreds of transactions per thread. The speedup rises up to 4.5X compared to the baseline.
 
-\vspace{-0.1in}
+\vspace{-0.15in}
 \subsection{Solution to Big Matrices} \label{sec_huge}
 \vspace{-0.1in}
 In our design, the maximum number of singular values can be processed on a singular GPU is $m_b = subinterval\_size \times thread\_block\_size$,
@@ -139,7 +139,7 @@ where $n$ is matrix size.
 Thus, there should be $\lfloor(n/l_t)\rfloor+1$ partitions with
 $\lfloor(n/l_t)\rfloor$ singular vectors in each partition.
 
-\vspace{-0.1in}
+\vspace{-0.15in}
 \subsection{Multiple GPUs on a server}\label{sec_mgpu}
 \vspace{-0.1in}
 We implement the multiple-GPU version with Pthread libraries on one server
