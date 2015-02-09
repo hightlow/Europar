@@ -32,7 +32,9 @@ This part is however beyond the scope of this paper.
 %\vspace{-0.5in}
 %\end{table}
 
+\vspace{-0.1in}
 \subsection{Comparison to Existing SVD Implementations}
+\vspace{-0.1in}
 We generate random bidiagonal matrices with double precision numbers in the range between 0 and 1.
 It is reasonable because many application require to scale data to [0,1], and some singular values are always clustered when matrix size become large.
 In order to achieve high confidence on the results, we generate 10 random matrices, and for each matrix, our SVD algorithm is executed 10 times on a GPU (or two GPUs).
@@ -142,6 +144,7 @@ This is because the ratio of stall caused by memory is 70\%, implying that there
 
 \vspace{-0.1in}
 \subsection{Experiments with Big Matrices}
+\vspace{-0.1in}
 Table \ref{tab:hugeResultTesla} shows the performance of very large matrix with double-precision floating-point numbers on a single Tesla and two Tesla GPUs on a server. For two Telsa GPUs, we compared static workload allocation (50\%/50\%) and dynamic allocation where each GPU is tracked constantly by the host CPU and assigned new workload as soon as it finishes the current kernel. 
 When matrix size reaches 1 million by 1 million our BT algorithm reaches the results in 54801 seconds with a single Telsa, and 35607 seconds with two Telsa GPUs. This is a 1.54X speedup.
 \begin{table}[h]
@@ -176,6 +179,7 @@ Matrix Size &  Tesla  & Static (2-GPU) & Dynamic (2-GPU) \\ \hline
 
 \vspace{-0.1in}
 \subsection{Profiling Analysis of GPU Kernels}
+\vspace{-0.1in}
 
 \subsubsection{Comparison of Two Different Singular Value Designs}
 We compare the execution time on two different singular value kernels:
