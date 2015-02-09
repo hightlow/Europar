@@ -3,9 +3,9 @@
 \vspace{-0.1in}
 \subsection{Singular Value Kernels} \label{sec_svalue}
 \vspace{-0.1in}
-To obtain the singular values, we divide the whole interval {\color{red}containing all the singular values} into several subintervals, which can be computed in parallel. 
+To obtain the singular values, we divide the whole interval containing all the singular values into several subintervals, which can be computed in parallel. 
 The whole interval can be calculated with Gershgorin circle theorem \cite{gershgorin}.
-Each subinterval can then be assigned to one GPU block for calculation.
+Each subinterval can then be assigned to one GPU block ({\bf FIXME: add a brief description of GPU block}) for calculation.
 Because there is a limit on the maximum number of threads for each GPU block,
 the number of singular values in a subinterval must not exceed that maximum number. Otherwise, the computation will have to be wrapped into two or more sequential phases to complete.
 Therefore how to divide the interval is critical for the performance of
@@ -34,7 +34,7 @@ The whole interval $[a_0, a_n)$ is divided into $n$ subintervals with
 the same length (i.e. same number of matrix elements). However, each
 such subinterval might not contain the same number of singular values.
 Mathematically, this strategy can be expressed as
-$a_{k+1}-a_k = a_{k}-a_{k-1}$. However, $NegCount(b_{k+1})-NegCount(b_{k}) \ne NegCount(b_{k})-NegCount(b_{k-1})$ is not necessarily true. We call this strategy as {\it equal length division}.
+$a_{k+1}-a_k = a_{k}-a_{k-1}$. However, $NegCount(b_{k+1})-NegCount(b_{k}) = NegCount(b_{k})-NegCount(b_{k-1})$ is not necessarily true. We call this strategy as {\it equal length division}.
 
 Such ``equal length division'' strategy has issues in load balancing on 
 parallel computing resources, as the number of singular values in each
@@ -57,7 +57,7 @@ However, because of the uneven number of singular values within subintervals, th
 Our novel strategy is to divide the whole interval by the number of singular values, as shown in Fig.\ref{fig:number_interval}. We call this approach {\it equal number division}. 
 Specifically, we divide the interval $[b_0,b_n)$ into $n$ subintervals, each of which has the same number of singular values. 
 However, the length of a subinterval is not necessarily equal to others.
-The mathematical representation can be written as $NegCount(b_{k+1})-NegCount(b_{k})=NegCount(b_{k})-NegCount(b_{k-1})$ but $b_{k+1}-b_k \ne b_{k}-b_{k-1}$ does not hold anymore.
+The mathematical representation can be written as $NegCount(b_{k+1})-NegCount(b_{k})=NegCount(b_{k})-NegCount(b_{k-1})$ but $b_{k+1}-b_k = b_{k}-b_{k-1}$ does not necessarily hold anymore.
 This equal number division significantly improves the load balancing on GPU cores, helping achieve a better speedup, as we show the performace evaluation in Figure \ref{fig:compare_value_kernel}.
 
 %The convergence of bisection algorithm on a splitting point makes it possible to compute the number of singular values before actually computing
@@ -75,7 +75,7 @@ The warp execution efficiency in equal number division version can reach 92.97\%
 \vspace{-0.1in}
 \subsection{Singular Vector Kernel} \label{sec_svector}
 \vspace{-0.1in}
-Since the singular vectors are two $n\times n$ dense matrices, as the matrix size increases, significant challenges are increasing on memory storage because the size of the fast shared memory is limited in GPU architectures.
+Since the singular vectors are two $n\times n$ dense matrices, as the matrix size increases, there is increasing pressure on memory storage because the size of the fast shared memory is limited in GPU architectures.
 It is impracticable to move all the matrix entries to the shared memory when matrix size becomes extremely large.
 
 Based on the twisted algorithm, the required memory size $M$ on GPU is determined by matrix size $n$ and the size of floating number $S$ in equation $M = 5 * S * n^2$.
@@ -144,7 +144,7 @@ $\lfloor(n/l_t)\rfloor$ singular vectors in each partition.
 \vspace{-0.1in}
 We implement the multiple-GPU version with Pthread libraries on one server
 to control data partition and assignment to GPUs.
-Pthreads is a nature choice for controlling multiple GPUs on a single server
+Pthread is a nature choice for controlling multiple GPUs on a single server
 because it uses shared memory architecture, dramatically reducing overheads
 on data sharing. We also design an extensible interface between CPU and GPU,
  which is easy to scale to physical distributed GPUs, compared to CUDA asynchronization interface. In our design, each thread takes control of one GPU.

@@ -6,7 +6,7 @@ A SVD of an arbitrary matrix $A\in \mathbb{R}^{m \times n} (m>n)$ is the form $A
 A typical SVD algorithm can be broken down into two steps \cite{65SIAM}.
 The first step is to reduce the initial matrix to bidiagonal by Householder transform.
 The second step is to diagonalize the bidiagonal matrix.
-{\color{red}Householder transform above has been optimized in paper \cite{LiuHouseholder} for small matrices. For very large matrices, it is still an open problem.} 
+Householder transform above has been optimized in paper \cite{LiuHouseholder} for small matrices. For very large matrices, it is still an open problem. 
 In this paper, we focus only on the second step that reduces a bidiagonal matrix to a diagonal matrix, for which the  ``bisection and twisted'' algorithm is designed.
 
 %\begin{equation}
@@ -131,7 +131,7 @@ Then the matrix $B^T B - \lambda^2 I$ can be decomposed as
 B^T B - \lambda^2 I_n = L D_L L^T = U D_U U^T ,
 \end{equation}
 where $D_L=diag(\alpha_1, \cdots, \alpha_n)$, $D_U = diag(\beta_1, \cdots, \beta_n)$, 
-{\color{red}$L$ is lower bidiagonal matrix, whose diagonal elements are $1$s and one-order subdiagonal are $l_{i}, (i=1,\cdots,n-1)$, $L$ is lower bidiagonal matrix with the same format above in Section \ref{subsec:bisection}}
+$L$ is lower bidiagonal matrix, whose diagonal elements are $1$s and one-order subdiagonal are $l_{i}, (i=1,\cdots,n-1)$ ($L$ share the same format as in Eq. (\ref{eq:T})).
 $U$ is upper bidiagonal matrix, whose diagonal elements are $1$s and one-order superdiagonal are $u_{i}, (i=1,\cdots,n-1)$. 
 %\[ L =  \left( \begin{array}{ccccc}
 %     1&      &       &        &  \\

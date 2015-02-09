@@ -34,7 +34,7 @@ This part is however beyond the scope of this paper.
 
 \subsection{Comparison to Existing SVD Implementations}
 We generate random bidiagonal matrices with double precision numbers in the range between 0 and 1.
-{\color{red} It is reasonable because many application require to scale data to [0,1], and some singular values are always clustered when matrix size become large.}
+It is reasonable because many application require to scale data to [0,1], and some singular values are always clustered when matrix size become large.
 In order to achieve high confidence on the results, we generate 10 random matrices, and for each matrix, our SVD algorithm is executed 10 times on a GPU (or two GPUs).
 The standard deviation of their execution time is very small, so we report the average execution time across the 100 runs as the performance results.
 
@@ -42,7 +42,7 @@ We compare our algorithm with CULA GPU library \cite{cula}, Intel MKL library \c
 We measure the performance of CULA on Tesla K40c, and that of Intel MKL on an 8-core 2.53GHz CPU.
 Until now, CULA library only has a QR based routine called culaDbdsqr.
 Intel MKL library has both DC routine DBDSDC and QR routine DBDSQR. We select a faster routine DBDSDC for a comparison.
-For Sheetal's \cite{09IPDPSQR} and Liu's \cite{13CFDC} implementation, we use the experimental results presendted in their paper. 
+For Sheetal's \cite{09IPDPSQR} and Liu's \cite{13CFDC} implementation, we use the experimental results presented in their paper. 
 
 \begin{figure}[hbpt]
 \vspace{-0.3in}
@@ -151,7 +151,7 @@ When matrix size reaches 1 million by 1 million our BT algorithm reaches the res
 \centering
 \begin{tabular}{|c|c|c|c|}
 \hline
-Matrix Size &  Tesla  & Static & Dynamic \\ \hline
+Matrix Size &  Tesla  & Static (2-GPU) & Dynamic (2-GPU) \\ \hline
 % 10K*10K    &   1.5s  &  1.9s / 1.2s &  0.9s / 2.5s \\ \hline
 % 20K*20K    &   7.9s  &  7.4s / 5.7s &  3.1s / 10s \\ \hline
 % 30K*30K    &    25s  &   17s /  14s &  12s  / 19s \\ \hline
@@ -269,12 +269,12 @@ The error tolerance is between $10^{-5}$ to $10^{-16}$ with tenfolder decreasing
 \end{figure}
 Figure \ref{fig:tolerance} shows the average increased execution time when the accuracy of singular values goes up a higher level.
 In other word, it shows the average increased execution time when the error tolerance becomes smaller from $10^{-x}$ to $10^{-(x+1)}, (x=5,\cdots,15)$.
-The additional execution time is only less than $20 ms$ when matrix size is smaller than 12000, and $40 ms$ when matrix size is larger than 15000.
+The additional execution time is less than $20 ms$ when matrix size is smaller than 12000, and $40 ms$ when matrix size is larger than 15000.
+{\bf FIXME: In either case, the increased time is negligible compared to the overall exeuction time.}
 
 \vspace{-0.1in}
 \subsubsection{Orthogonality of Singular Vector}
 \vspace{-0.1in}
 Figure \ref{fig:ortho_img} shows the image of multiplication of sigular vectors when matrix size is 10000.
 The element of white diagonal are close to 1s, and the element in black areas are 0s.
-To obtain
 The error distribution of orthogonality is shown in \ref{fig:ortho_err}. We can see that the BT algorithm has good orthogonality.
